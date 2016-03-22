@@ -16,5 +16,3 @@ jwt:
     authentication:
       path: auth
       refresh: refresh
-    protected:
-      path: protected

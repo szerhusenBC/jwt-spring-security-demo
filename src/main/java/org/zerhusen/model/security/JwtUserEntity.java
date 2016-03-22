@@ -41,7 +41,7 @@ public class JwtUserEntity implements Serializable {
         this.id = id;
     }
 
-    @Column(name = "username")
+    @Column(name = "username", nullable = false)
     public String getUsername() {
         return this.username;
     }
@@ -50,7 +50,7 @@ public class JwtUserEntity implements Serializable {
         this.username = username;
     }
 
-    @Column(name = "password")
+    @Column(name = "password", nullable = false)
     public String getPassword() {
         return this.password;
     }
@@ -59,7 +59,7 @@ public class JwtUserEntity implements Serializable {
         this.password = password;
     }
 
-    @Column(name = "email")
+    @Column(name = "email", nullable = false)
     public String getEmail() {
         return this.email;
     }

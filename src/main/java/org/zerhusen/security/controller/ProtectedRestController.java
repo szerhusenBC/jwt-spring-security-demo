@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("${jwt.route.protected.path}")
+@RequestMapping("protected")
 public class ProtectedRestController {
 
     /**
@@ -20,7 +20,7 @@ public class ProtectedRestController {
     //@PreAuthorize("hasRole('ADMIN')")
     @PreAuthorize("@securityService.hasProtectedAccess()")
     public ResponseEntity<?> getDaHoney() {
-        return ResponseEntity.ok(":O");
+        return ResponseEntity.ok("Greetings from admin protected method!");
     }
 
 }

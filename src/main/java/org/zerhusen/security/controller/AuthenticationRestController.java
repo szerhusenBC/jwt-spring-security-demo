@@ -24,10 +24,7 @@ import org.zerhusen.security.service.JwtAuthenticationResponse;
 import javax.servlet.http.HttpServletRequest;
 
 @RestController
-@RequestMapping("${jwt.route.authentication.path}")
 public class AuthenticationRestController {
-
-    private final Logger LOGGER = Logger.getLogger(this.getClass());
 
     @Value("${jwt.header}")
     private String tokenHeader;
@@ -41,7 +38,7 @@ public class AuthenticationRestController {
     @Autowired
     private UserDetailsService userDetailsService;
 
-    @RequestMapping(method = RequestMethod.POST)
+    @RequestMapping(value = "${jwt.route.authentication.path}", method = RequestMethod.POST)
     public ResponseEntity<?> createAuthenticationToken(@RequestBody JwtAuthenticationRequest authenticationRequest, Device device) throws AuthenticationException {
 
         // Perform the security

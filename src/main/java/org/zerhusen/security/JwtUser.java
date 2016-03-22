@@ -36,6 +36,7 @@ public class JwtUser implements UserDetails {
         this.setAuthorities(authorities);
     }
 
+    @JsonIgnore
     public Long getId() {
         return this.id;
     }
