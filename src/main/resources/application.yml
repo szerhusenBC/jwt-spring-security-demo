@@ -16,3 +16,8 @@ jwt:
     authentication:
       path: auth
       refresh: refresh
+
+#logging:
+#  level:
+#    org.springframework:
+#      security: DEBUG

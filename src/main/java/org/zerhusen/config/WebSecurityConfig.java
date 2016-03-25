@@ -17,7 +17,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.zerhusen.security.JwtAuthenticationEntryPoint;
 import org.zerhusen.security.JwtAuthenticationTokenFilter;
-import org.zerhusen.security.SecurityService;
 
 @SuppressWarnings("SpringJavaAutowiringInspection")
 @Configuration
@@ -30,9 +29,6 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Autowired
     private UserDetailsService userDetailsService;
-
-    @Autowired
-    private SecurityService securityService;
 
     @Autowired
     public void configureAuthentication(AuthenticationManagerBuilder authenticationManagerBuilder) throws Exception {
@@ -57,11 +53,6 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         JwtAuthenticationTokenFilter authenticationTokenFilter = new JwtAuthenticationTokenFilter();
         authenticationTokenFilter.setAuthenticationManager(authenticationManagerBean());
         return authenticationTokenFilter;
-    }
-
-    @Bean
-    public SecurityService securityService() {
-        return securityService;
     }
 
     @Override

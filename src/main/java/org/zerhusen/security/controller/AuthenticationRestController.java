@@ -1,6 +1,5 @@
 package org.zerhusen.security.controller;
 
-import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
@@ -51,8 +50,8 @@ public class AuthenticationRestController {
         SecurityContextHolder.getContext().setAuthentication(authentication);
 
         // Reload password post-security so we can generate token
-        final UserDetails userDetails = this.userDetailsService.loadUserByUsername(authenticationRequest.getUsername());
-        final String token = this.jwtTokenUtil.generateToken(userDetails, device);
+        final UserDetails userDetails = userDetailsService.loadUserByUsername(authenticationRequest.getUsername());
+        final String token = jwtTokenUtil.generateToken(userDetails, device);
 
         // Return the token
         return ResponseEntity.ok(new JwtAuthenticationResponse(token));
@@ -60,11 +59,12 @@ public class AuthenticationRestController {
 
     @RequestMapping(value = "${jwt.route.authentication.refresh}", method = RequestMethod.GET)
     public ResponseEntity<?> refreshAndGetAuthenticationToken(HttpServletRequest request) {
-        String token = request.getHeader(this.tokenHeader);
-        String username = this.jwtTokenUtil.getUsernameFromToken(token);
-        JwtUser user = (JwtUser) this.userDetailsService.loadUserByUsername(username);
-        if (this.jwtTokenUtil.canTokenBeRefreshed(token, user.getLastPasswordReset())) {
-            String refreshedToken = this.jwtTokenUtil.refreshToken(token);
+        String token = request.getHeader(tokenHeader);
+        String username = jwtTokenUtil.getUsernameFromToken(token);
+        JwtUser user = (JwtUser) userDetailsService.loadUserByUsername(username);
+
+        if (jwtTokenUtil.canTokenBeRefreshed(token, user.getLastPasswordResetDate())) {
+            String refreshedToken = jwtTokenUtil.refreshToken(token);
             return ResponseEntity.ok(new JwtAuthenticationResponse(refreshedToken));
         } else {
             return ResponseEntity.badRequest().body(null);

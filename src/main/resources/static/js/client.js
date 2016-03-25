@@ -40,7 +40,11 @@ $(function () {
             },
             error: function (jqXHR, textStatus, errorThrown) {
                 if (jqXHR.status === 401) {
-                    window.alert("Bad credentials!");
+                    $('#loginErrorModal')
+                        .modal("show")
+                        .find(".modal-body")
+                        .empty()
+                        .html("<p>Spring exception:<br>" + jqXHR.responseJSON.exception + "</p>");
                 } else {
                     throw new Error("an unexpected error occured: " + errorThrown);
                 }
@@ -102,7 +106,7 @@ $(function () {
             .attr("title", "Token: " + getJwtToken())
             .show();
     }
-    
+
     function showResponse(statusCode, message) {
         $response
             .empty()
@@ -145,10 +149,9 @@ $(function () {
             url: "/protected",
             type: "GET",
             contentType: "application/json; charset=utf-8",
-            dataType: "json",
             headers: createAuthorizationTokenHeader(),
             success: function (data, textStatus, jqXHR) {
-                showResponse(jqXHR.status, JSON.stringify(data));
+                showResponse(jqXHR.status, data);
             },
             error: function (jqXHR, textStatus, errorThrown) {
                 showResponse(jqXHR.status, errorThrown);
