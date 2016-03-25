@@ -28,7 +28,7 @@ There are three endpoints that are reasonable for the demo:
 /protected - an example endpoint that is restricted to authorized users with the role 'ROLE_ADMIN' (a valid JWT token must be present in the request header)
 ```
 
-I've written a small Javascript client and put some comments in the code that hopefully make this demo
+I've written a small Javascript client and put some comments in the code that hopefully makes this demo
 understandable.
 
 ---------------------------------------
