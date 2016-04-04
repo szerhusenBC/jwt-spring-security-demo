@@ -13,7 +13,7 @@ This demo is build with with Maven and Java 1.8.
 Just start the application with the Spring Boot maven plugin (`mvn spring-boot:run`). The application is
 running at [http://localhost:8080](http://localhost:8080).
 
-There are three user accounts present to demonstrate the differing levels of access to the endpoints in
+There are three user accounts present to demonstrate the different levels of access to the endpoints in
 the API and the different authorization exceptions:
 ```
 Admin - admin:admin
