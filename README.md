@@ -1,6 +1,6 @@
 # JWT Spring Security Demo
 
-![Screenshot from running application](blob/master/etc/screenshot-jwt-spring-security-demo.png?raw=true "Screenshot JWT Spring Security Demo")
+![Screenshot from running application](etc/screenshot-jwt-spring-security-demo.png?raw=true "Screenshot JWT Spring Security Demo")
 
 ##About
 This is just a simple demo for using **JWT (JSON Web Token)** with **Spring Security** and
