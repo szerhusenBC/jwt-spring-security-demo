@@ -33,6 +33,17 @@ There are three endpoints that are reasonable for the demo:
 I've written a small Javascript client and put some comments in the code that hopefully makes this demo
 understandable.
 
+##Creator
+
+**Stephan Zerhusen**
+
+* <https://twitter.com/stzerhus>
+* <https://github.com/szerhusenBC>
+
+##Copyright and license
+
+The code is released under the [MIT license](LICENSE?raw=true).
+
 ---------------------------------------
 
 Please feel free to send me some feedback or questions!
