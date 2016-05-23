@@ -1,0 +1,63 @@
+<?xml version="1.0"?>
+<FindBugsFilter>
+
+   <!-- Don't bother with EI - expose internal representation (e.g. getter/setter for Date) -->
+   <Match>
+      <Bug code="EI,EI2"/>
+   </Match>
+
+   <!--
+       &lt;!&ndash; Unchecked cast is deliberate &ndash;&gt;
+       <Match>
+           <Class name="org.apache.commons.net.ftp.FTPSServerSocketFactory" />
+           <Method name="init" />
+           <Bug code="BC" />
+       </Match>
+
+       &lt;!&ndash; Unchecked cast is deliberate &ndash;&gt;
+       <Match>
+           <Class name="org.apache.commons.net.ftp.FTPSSocketFactory" />
+           <Method name="init" />
+           <Bug code="BC" />
+       </Match>
+
+       &lt;!&ndash; Don't bother with EI - expose internal representation &ndash;&gt;
+       <Match>
+           <Bug code="EI,EI2" />
+       </Match>
+
+       &lt;!&ndash; future FTPClientConfig instances may not implement configurable &ndash;&gt;
+       <Match>
+           <Class name="org.apache.commons.net.ftp.parser.ConfigurableFTPFileEntryParserImpl" />
+           <Method name="configure" />
+           <Bug code="BC" />
+       </Match>
+
+       &lt;!&ndash; Switch fallthrough is deliberate &ndash;&gt;
+       <Match>
+           <Class name="org.apache.commons.net.ftp.parser.UnixFTPEntryParser" />
+           <Method name="parseFTPEntry" />
+           <Bug code="SF" />
+       </Match>
+
+       &lt;!&ndash; False positive - missing default &ndash;&gt;
+       <Match>
+           <Class name="org.apache.commons.net.io.DotTerminatedMessageWriter" />
+           <Method name="write" />
+           <Bug code="SF" />
+       </Match>
+
+       &lt;!&ndash; False positive - missing default &ndash;&gt;
+       <Match>
+           <Class name="org.apache.commons.net.io.ToNetASCIIOutputStream" />
+           <Method name="write" />
+           <Bug code="SF" />
+       </Match>
+
+       &lt;!&ndash; Don't check examples &ndash;&gt;
+       <Match>
+           <Package name="~examples\..*" />
+       </Match>
+   -->
+
+</FindBugsFilter>
