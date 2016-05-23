@@ -33,6 +33,10 @@ There are three endpoints that are reasonable for the demo:
 I've written a small Javascript client and put some comments in the code that hopefully makes this demo
 understandable.
 
+###Generating password hash for new users
+
+I'm using [bcrypt](https://en.wikipedia.org/wiki/Bcrypt) to encode passwords. Your can generate your hashes with this simple tool: [Bcrypt Generator](https://www.bcrypt-generator.com)
+
 ##Creator
 
 **Stephan Zerhusen**
