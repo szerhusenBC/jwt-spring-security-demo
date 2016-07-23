@@ -1,7 +1,9 @@
 # JWT Spring Security Demo
 
+![Screenshot from running application](etc/screenshot-jwt-spring-security-demo.png?raw=true "Screenshot JWT Spring Security Demo")
+
 ##About
-This is just a simple demo for using **JWT (Json Web Token)** with **Spring Security** and
+This is just a simple demo for using **JWT (JSON Web Token)** with **Spring Security** and
 **Spring Boot**. This solution is partially based on the blog entry
 [REST Security with JWT using Java and Spring Security](https://www.toptal.com/java/rest-security-with-jwt-spring-security-and-java)
 and the demo project [Cerberus](https://github.com/brahalla/Cerberus). Thanks to the authors!
@@ -13,7 +15,7 @@ This demo is build with with Maven and Java 1.8.
 Just start the application with the Spring Boot maven plugin (`mvn spring-boot:run`). The application is
 running at [http://localhost:8080](http://localhost:8080).
 
-There are three user accounts present to demonstrate the differing levels of access to the endpoints in
+There are three user accounts present to demonstrate the different levels of access to the endpoints in
 the API and the different authorization exceptions:
 ```
 Admin - admin:admin
@@ -30,6 +32,21 @@ There are three endpoints that are reasonable for the demo:
 
 I've written a small Javascript client and put some comments in the code that hopefully makes this demo
 understandable.
+
+###Generating password hash for new users
+
+I'm using [bcrypt](https://en.wikipedia.org/wiki/Bcrypt) to encode passwords. Your can generate your hashes with this simple tool: [Bcrypt Generator](https://www.bcrypt-generator.com)
+
+##Creator
+
+**Stephan Zerhusen**
+
+* <https://twitter.com/stzerhus>
+* <https://github.com/szerhusenBC>
+
+##Copyright and license
+
+The code is released under the [MIT license](LICENSE?raw=true).
 
 ---------------------------------------
 
