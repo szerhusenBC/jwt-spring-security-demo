@@ -37,6 +37,25 @@ understandable.
 
 I'm using [bcrypt](https://en.wikipedia.org/wiki/Bcrypt) to encode passwords. Your can generate your hashes with this simple tool: [Bcrypt Generator](https://www.bcrypt-generator.com)
 
+###Using another database
+
+Actually this demo used an embedded H2 database that is automatically configured by Spring Boot. If you want to connect to another database you have to specify the connection in the *application.yml* in the resource directory. Here is an example for a MySQL DB:
+
+```
+spring:
+  jpa:
+    hibernate:
+      # possible values: validate | update | create | create-drop
+      ddl-auto: create-drop
+  datasource:
+    url: jdbc:mysql://localhost/myDatabase
+    username: myUser
+    password: myPassword
+    driver-class-name: com.mysql.jdbc.Driver
+```
+
+You can find a reference of all properties [here](http://docs.spring.io/spring-boot/docs/current/reference/html/common-application-properties.html).
+
 ##Creator
 
 **Stephan Zerhusen**
