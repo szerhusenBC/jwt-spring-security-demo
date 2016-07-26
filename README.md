@@ -39,7 +39,7 @@ I'm using [bcrypt](https://en.wikipedia.org/wiki/Bcrypt) to encode passwords. Yo
 
 ###Using another database
 
-Actually this demo used an embedded H2 database that is automatically configured by Spring Boot. If you want to connect to another database you have to specify the connection in the *application.yml* in the resource directory. Here is an example for a MySQL DB:
+Actually this demo is using an embedded H2 database that is automatically configured by Spring Boot. If you want to connect to another database you have to specify the connection in the *application.yml* in the resource directory. Here is an example for a MySQL DB:
 
 ```
 spring:
