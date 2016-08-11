@@ -11,6 +11,18 @@
     <!-- Optional theme -->
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap-theme.min.css"
           integrity="sha384-fLW2N01lMqjakBkx3l/M9EahuwpSfeNvV63J5ezn3uZzapT0u7EYsXMjQV+0En5r" crossorigin="anonymous">
+
+    <style type="text/css">
+       .text-hidden {
+          text-overflow: ellipsis;
+          overflow: hidden;
+          white-space: nowrap;
+       }
+
+       .text-shown {
+          word-wrap: break-word;
+       }
+    </style>
 </head>
 <body>
 <div class="container">
@@ -18,8 +30,7 @@
 
     <div class="alert alert-danger" id="notLoggedIn">Not logged in!</div>
 
-    <div class="alert alert-info" id="loggedIn"
-         style="text-overflow: ellipsis;overflow: hidden;white-space: nowrap;"></div>
+    <div class="alert alert-info text-hidden" id="loggedIn"></div>
 
     <div class="row">
         <div class="col-md-6">
