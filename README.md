@@ -56,6 +56,12 @@ spring:
 
 You can find a reference of all properties [here](http://docs.spring.io/spring-boot/docs/current/reference/html/common-application-properties.html).
 
+##External resources
+
+Dan Vega (https://twitter.com/therealdanvega) created a video that explained this project quite fine. Thanks to him!
+
+https://youtu.be/mD3vmgksvz8
+
 ##Creator
 
 **Stephan Zerhusen**
