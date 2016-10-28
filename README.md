@@ -54,7 +54,9 @@ spring:
     driver-class-name: com.mysql.jdbc.Driver
 ```
 
-You can find a reference of all properties [here](http://docs.spring.io/spring-boot/docs/current/reference/html/common-application-properties.html).
+*Hint:* For other databases like MySQL sequences don't work for ID generation. So you have to change the GenerationType in the entity beans to 'AUTO' or 'IDENTITY'.
+
+You can find a reference of all application properties [here](http://docs.spring.io/spring-boot/docs/current/reference/html/common-application-properties.html).
 
 ##External resources
 
