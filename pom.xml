@@ -11,6 +11,27 @@
     <name>jwtdemo</name>
     <description>Demo project for JWT with Spring Security</description>
 
+    <licenses>
+        <license>
+            <name>MIT license</name>
+            <url>https://raw.githubusercontent.com/szerhusenBC/jwt-spring-security-demo/master/LICENSE</url>
+        </license>
+    </licenses>
+
+    <developers>
+        <developer>
+            <name>Stephan Zerhusen</name>
+            <email>stephan.zerhusen@gmail.com</email>
+        </developer>
+    </developers>
+
+    <scm>
+        <connection>scm:git:git://github.com/szerhusenBC/jwt-spring-security-demo.git</connection>
+        <url>https://github.com/szerhusenBC/jwt-spring-security-demo</url>
+        <developerConnection>scm:git:git@github.com/szerhusenBC/jwt-spring-security-demo.git</developerConnection>
+        <tag>HEAD</tag>
+    </scm>
+
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
@@ -100,7 +121,6 @@
                 </plugins>
             </build>
         </profile>
-
     </profiles>
 
 </project>
