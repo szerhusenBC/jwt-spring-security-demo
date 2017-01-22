@@ -4,12 +4,12 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>org.zerhusen</groupId>
-    <artifactId>jwtdemo</artifactId>
+    <artifactId>jwt-spring-security-demo</artifactId>
     <version>0.0.1-SNAPSHOT</version>
     <packaging>jar</packaging>
 
-    <name>jwtdemo</name>
-    <description>Demo project for JWT with Spring Security</description>
+    <name>jwt-spring-security-demo</name>
+    <description>Demo project for JWT with Spring Boot and Spring Security</description>
 
     <licenses>
         <license>
@@ -46,6 +46,7 @@
         <jjwt.version>0.7.0</jjwt.version>
 
         <findbugs-maven-plugin.version>3.0.4</findbugs-maven-plugin.version>
+        <docker-maven-plugin.version>0.4.13</docker-maven-plugin.version>
     </properties>
 
     <dependencies>
@@ -117,6 +118,36 @@
                                 </goals>
                             </execution>
                         </executions>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+
+        <profile>
+            <id>docker</id>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>com.spotify</groupId>
+                        <artifactId>docker-maven-plugin</artifactId>
+                        <version>${docker-maven-plugin.version}</version>
+                        <configuration>
+                            <imageName>org.zerhusen/jwt-spring-security-demo</imageName>
+                            <baseImage>openjdk:8</baseImage>
+                            <imageTags>
+                                <imageTag>${project.version}</imageTag>
+                                <imageTag>latest</imageTag>
+                            </imageTags>
+                            <entryPoint>["java", "-jar", "/${project.build.finalName}.jar"]</entryPoint>
+                            <!-- copy the service's jar file from target into the root directory of the image -->
+                            <resources>
+                                <resource>
+                                    <targetPath>/</targetPath>
+                                    <directory>${project.build.directory}</directory>
+                                    <include>${project.build.finalName}.jar</include>
+                                </resource>
+                            </resources>
+                        </configuration>
                     </plugin>
                 </plugins>
             </build>
