@@ -14,14 +14,17 @@
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
-        <version>1.4.1.RELEASE</version>
+        <version>1.4.3.RELEASE</version>
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <java.version>1.8</java.version>
+
         <jjwt.version>0.7.0</jjwt.version>
+
+        <findbugs-maven-plugin.version>3.0.4</findbugs-maven-plugin.version>
     </properties>
 
     <dependencies>
@@ -73,12 +76,15 @@
     <profiles>
         <profile>
             <id>findbugs</id>
+            <activation>
+                <activeByDefault>true</activeByDefault>
+            </activation>
             <build>
                 <plugins>
                     <plugin>
                         <groupId>org.codehaus.mojo</groupId>
                         <artifactId>findbugs-maven-plugin</artifactId>
-                        <version>3.0.3</version>
+                        <version>${findbugs-maven-plugin.version}</version>
                         <configuration>
                             <excludeFilterFile>${basedir}/etc/findbugs-exclude-filter.xml</excludeFilterFile>
                         </configuration>
