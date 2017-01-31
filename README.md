@@ -61,6 +61,13 @@ You can find a reference of all application properties [here](http://docs.spring
 ##Docker
 This project has a docker image. You can find it at [https://hub.docker.com/r/hubae/jwt-spring-security-demo/](https://hub.docker.com/r/hubae/jwt-spring-security-demo/).
 
+##Questions
+If you have project related questions please take a look at the [past questions](https://github.com/szerhusenBC/jwt-spring-security-demo/issues?utf8=%E2%9C%93&q=is%3Aissue%20is%3Aopen%2Cclosed%20label%3Aquestion%20) or create a new ticket with your question.
+
+*If you have questions that are not directly related to this project (e.g. common questions to the Spring Framework or Spring Security etc.) please search the web or look at [Stackoverflow](http://www.stackoverflow.com).*
+
+Sorry for that but I'm very busy right now and don't have much time. 
+
 ##External resources
 
 Dan Vega (https://twitter.com/therealdanvega) created a video that explained this project quite fine. Thanks to him!
