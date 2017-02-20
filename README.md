@@ -8,8 +8,10 @@ This is just a simple demo for using **JWT (JSON Web Token)** with **Spring Secu
 [REST Security with JWT using Java and Spring Security](https://www.toptal.com/java/rest-security-with-jwt-spring-security-and-java)
 and the demo project [Cerberus](https://github.com/brahalla/Cerberus). Thanks to the authors!
 
+[![Build Status](https://travis-ci.org/szerhusenBC/jwt-spring-security-demo.svg?branch=master)](https://travis-ci.org/szerhusenBC/jwt-spring-security-demo)
+
 ##Requirements
-This demo is build with with Maven and Java 1.8.
+This demo is build with with Maven 3 and Java 1.8.
 
 ##Usage
 Just start the application with the Spring Boot maven plugin (`mvn spring-boot:run`). The application is
