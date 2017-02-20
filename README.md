@@ -66,7 +66,11 @@ If you have project related questions please take a look at the [past questions]
 
 *If you have questions that are not directly related to this project (e.g. common questions to the Spring Framework or Spring Security etc.) please search the web or look at [Stackoverflow](http://www.stackoverflow.com).*
 
-Sorry for that but I'm very busy right now and don't have much time. 
+Sorry for that but I'm very busy right now and don't have much time.
+
+## Interesting projects
+
+* [spring-security-pac4j](https://github.com/pac4j/spring-security-pac4j) a Spring Boot integration Java security engine Pac4j (a Java security engine that coveres JWT beside others)
 
 ##External resources
 
