@@ -2,7 +2,7 @@
 
 ![Screenshot from running application](etc/screenshot-jwt-spring-security-demo.png?raw=true "Screenshot JWT Spring Security Demo")
 
-##About
+## About
 This is just a simple demo for using **JWT (JSON Web Token)** with **Spring Security** and
 **Spring Boot**. This solution is partially based on the blog entry
 [REST Security with JWT using Java and Spring Security](https://www.toptal.com/java/rest-security-with-jwt-spring-security-and-java)
