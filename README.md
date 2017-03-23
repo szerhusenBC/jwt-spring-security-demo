@@ -10,10 +10,10 @@ and the demo project [Cerberus](https://github.com/brahalla/Cerberus). Thanks to
 
 [![Build Status](https://travis-ci.org/szerhusenBC/jwt-spring-security-demo.svg?branch=master)](https://travis-ci.org/szerhusenBC/jwt-spring-security-demo)
 
-##Requirements
+## Requirements
 This demo is build with with Maven 3 and Java 1.8.
 
-##Usage
+## Usage
 Just start the application with the Spring Boot maven plugin (`mvn spring-boot:run`). The application is
 running at [http://localhost:8080](http://localhost:8080).
 
@@ -35,11 +35,11 @@ There are three endpoints that are reasonable for the demo:
 I've written a small Javascript client and put some comments in the code that hopefully makes this demo
 understandable.
 
-###Generating password hash for new users
+### Generating password hash for new users
 
 I'm using [bcrypt](https://en.wikipedia.org/wiki/Bcrypt) to encode passwords. Your can generate your hashes with this simple tool: [Bcrypt Generator](https://www.bcrypt-generator.com)
 
-###Using another database
+### Using another database
 
 Actually this demo is using an embedded H2 database that is automatically configured by Spring Boot. If you want to connect to another database you have to specify the connection in the *application.yml* in the resource directory. Here is an example for a MySQL DB:
 
@@ -60,10 +60,10 @@ spring:
 
 You can find a reference of all application properties [here](http://docs.spring.io/spring-boot/docs/current/reference/html/common-application-properties.html).
 
-##Docker
+## Docker
 This project has a docker image. You can find it at [https://hub.docker.com/r/hubae/jwt-spring-security-demo/](https://hub.docker.com/r/hubae/jwt-spring-security-demo/).
 
-##Questions
+## Questions
 If you have project related questions please take a look at the [past questions](https://github.com/szerhusenBC/jwt-spring-security-demo/issues?utf8=%E2%9C%93&q=is%3Aissue%20is%3Aopen%2Cclosed%20label%3Aquestion%20) or create a new ticket with your question.
 
 *If you have questions that are not directly related to this project (e.g. common questions to the Spring Framework or Spring Security etc.) please search the web or look at [Stackoverflow](http://www.stackoverflow.com).*
@@ -74,20 +74,20 @@ Sorry for that but I'm very busy right now and don't have much time.
 
 * [spring-security-pac4j](https://github.com/pac4j/spring-security-pac4j) a Spring Boot integration for Pac4j (a Java security engine that coveres JWT beside others)
 
-##External resources
+## External resources
 
 Dan Vega (https://twitter.com/therealdanvega) created a video that explained this project quite fine. Thanks to him!
 
 https://youtu.be/mD3vmgksvz8
 
-##Creator
+## Creator
 
 **Stephan Zerhusen**
 
 * <https://twitter.com/stzerhus>
 * <https://github.com/szerhusenBC>
 
-##Copyright and license
+## Copyright and license
 
 The code is released under the [MIT license](LICENSE?raw=true).
 
