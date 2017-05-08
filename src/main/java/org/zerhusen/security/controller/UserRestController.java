@@ -17,11 +17,14 @@ public class UserRestController {
     @Value("${jwt.header}")
     private String tokenHeader;
 
-    @Autowired
     private JwtTokenUtil jwtTokenUtil;
+    private UserDetailsService userDetailsService;
 
     @Autowired
-    private UserDetailsService userDetailsService;
+    public UserRestController(JwtTokenUtil jwtTokenUtil, UserDetailsService userDetailsService) {
+        this.jwtTokenUtil = jwtTokenUtil;
+        this.userDetailsService = userDetailsService;
+    }
 
     @RequestMapping(value = "user", method = RequestMethod.GET)
     public JwtUser getAuthenticatedUser(HttpServletRequest request) {
