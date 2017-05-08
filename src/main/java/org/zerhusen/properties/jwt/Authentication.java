@@ -2,10 +2,12 @@ package org.zerhusen.properties.jwt;
 
 import org.hibernate.validator.constraints.NotEmpty;
 
+import java.io.Serializable;
+
 /**
  * Created by glenn on 08.05.17.
  */
-public class Authentication {
+public class Authentication implements Serializable {
     @NotEmpty
     private String path;
     @NotEmpty

@@ -6,6 +6,7 @@ import org.springframework.boot.context.properties.NestedConfigurationProperty;
 import org.springframework.stereotype.Component;
 
 import javax.validation.Valid;
+import java.io.Serializable;
 
 /**
  * Created by glenn on 08.05.17.
@@ -13,7 +14,7 @@ import javax.validation.Valid;
 
 @Component
 @ConfigurationProperties(prefix = "jwt")
-public class JwtProperties {
+public class JwtProperties implements Serializable {
     @NotEmpty
     private String header;
     @NotEmpty
