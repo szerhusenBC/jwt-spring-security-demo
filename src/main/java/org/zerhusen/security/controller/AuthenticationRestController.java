@@ -1,7 +1,6 @@
 package org.zerhusen.security.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.mobile.device.Device;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -15,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
+import org.zerhusen.properties.jwt.JwtProperties;
 import org.zerhusen.security.JwtAuthenticationRequest;
 import org.zerhusen.security.JwtTokenUtil;
 import org.zerhusen.security.JwtUser;
@@ -25,18 +25,17 @@ import javax.servlet.http.HttpServletRequest;
 @RestController
 public class AuthenticationRestController {
 
-    @Value("${jwt.header}")
-    private String tokenHeader;
-
     private AuthenticationManager authenticationManager;
     private JwtTokenUtil jwtTokenUtil;
     private UserDetailsService userDetailsService;
+    private JwtProperties jwtProperties;
 
     @Autowired
-    public AuthenticationRestController(AuthenticationManager authenticationManager, JwtTokenUtil jwtTokenUtil, UserDetailsService userDetailsService) {
+    public AuthenticationRestController(AuthenticationManager authenticationManager, JwtTokenUtil jwtTokenUtil, UserDetailsService userDetailsService, JwtProperties jwtProperties) {
         this.authenticationManager = authenticationManager;
         this.jwtTokenUtil = jwtTokenUtil;
         this.userDetailsService = userDetailsService;
+        this.jwtProperties = jwtProperties;
     }
 
     @RequestMapping(value = "${jwt.route.authentication.path}", method = RequestMethod.POST)
@@ -61,7 +60,7 @@ public class AuthenticationRestController {
 
     @RequestMapping(value = "${jwt.route.authentication.refresh}", method = RequestMethod.GET)
     public ResponseEntity<?> refreshAndGetAuthenticationToken(HttpServletRequest request) {
-        String token = request.getHeader(tokenHeader);
+        String token = request.getHeader(jwtProperties.getHeader());
         String username = jwtTokenUtil.getUsernameFromToken(token);
         JwtUser user = (JwtUser) userDetailsService.loadUserByUsername(username);
 
