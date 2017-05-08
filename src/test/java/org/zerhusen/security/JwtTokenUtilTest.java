@@ -3,15 +3,14 @@ package org.zerhusen.security;
 import org.assertj.core.util.DateUtil;
 import org.junit.Before;
 import org.junit.Test;
-import org.springframework.test.util.ReflectionTestUtils;
-import org.springframework.util.ReflectionUtils;
+import org.zerhusen.properties.jwt.JwtProperties;
 
-import java.lang.reflect.Field;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 /**
  * Created by stephan on 10.09.16.
@@ -19,12 +18,14 @@ import static org.assertj.core.api.Assertions.assertThat;
 public class JwtTokenUtilTest {
 
     private JwtTokenUtil jwtTokenUtil;
+    private JwtProperties jwtProperties;
 
     @Before
     public void init() {
-        jwtTokenUtil = new JwtTokenUtil();
-        ReflectionTestUtils.setField(jwtTokenUtil, "expiration", 3600000L);
-        ReflectionTestUtils.setField(jwtTokenUtil, "secret", "mySecret");
+        jwtProperties = mock(JwtProperties.class);
+        jwtTokenUtil = new JwtTokenUtil(jwtProperties);
+        when(jwtProperties.getExpiration()).thenReturn(3600000L);
+        when(jwtProperties.getSecret()).thenReturn("mySecret");
     }
 
     @Test
