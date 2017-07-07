@@ -7,6 +7,7 @@ $(function () {
     var TOKEN_KEY = "jwtToken"
     var $notLoggedIn = $("#notLoggedIn");
     var $loggedIn = $("#loggedIn").hide();
+    var $loggedInBody = $("#loggedInBody");
     var $response = $("#response");
     var $login = $("#login");
     var $userInfo = $("#userInfo").hide();
@@ -35,16 +36,16 @@ $(function () {
                 setJwtToken(data.token);
                 $login.hide();
                 $notLoggedIn.hide();
-                showTokenInformation()
+                showTokenInformation();
                 showUserInformation();
             },
             error: function (jqXHR, textStatus, errorThrown) {
                 if (jqXHR.status === 401) {
                     $('#loginErrorModal')
-                        .modal("show")
-                        .find(".modal-body")
-                        .empty()
-                        .html("<p>Spring exception:<br>" + jqXHR.responseJSON.exception + "</p>");
+                            .modal("show")
+                            .find(".modal-body")
+                            .empty()
+                            .html("<p>Spring exception:<br>" + jqXHR.responseJSON.exception + "</p>");
                 } else {
                     throw new Error("an unexpected error occured: " + errorThrown);
                 }
@@ -56,12 +57,10 @@ $(function () {
         removeJwtToken();
         $login.show();
         $userInfo
-            .hide()
-            .find("#userInfoBody").empty();
-        $loggedIn
-            .hide()
-            .attr("title", "")
-            .empty();
+                .hide()
+                .find("#userInfoBody").empty();
+        $loggedIn.hide();
+        $loggedInBody.empty();
         $notLoggedIn.show();
     }
 
@@ -101,16 +100,37 @@ $(function () {
     }
 
     function showTokenInformation() {
-        $loggedIn
-            .text("Token: " + getJwtToken())
-            .attr("title", "Token: " + getJwtToken())
-            .show();
+        var jwtToken = getJwtToken();
+        var decodedToken = jwt_decode(jwtToken);
+        console.log(decodedToken);
+
+        $loggedInBody.append($("<h4>").text("Token"));
+        $loggedInBody.append($("<div>").text(jwtToken).css("word-break", "break-all"));
+        $loggedInBody.append($("<h4>").text("Token claims"));
+
+        var $table = $("<table>")
+                .addClass("table table-striped");
+        appendKeyValue($table, "sub", decodedToken.sub);
+        appendKeyValue($table, "audience", decodedToken.audience);
+        appendKeyValue($table, "created", new Date(decodedToken.created).toISOString());
+        appendKeyValue($table, "exp", decodedToken.exp);
+
+        $loggedInBody.append($table);
+
+        $loggedIn.show();
+    }
+
+    function appendKeyValue($table, key, value) {
+        var $row = $("<tr>")
+                .append($("<td>").text(key))
+                .append($("<td>").text(value));
+        $table.append($row);
     }
 
     function showResponse(statusCode, message) {
         $response
-            .empty()
-            .text("status code: " + statusCode + "\n-------------------------\n" + message);
+                .empty()
+                .text("status code: " + statusCode + "\n-------------------------\n" + message);
     }
 
     // REGISTER EVENT LISTENERS =============================================================
