@@ -112,7 +112,7 @@ $(function () {
                 .addClass("table table-striped");
         appendKeyValue($table, "sub", decodedToken.sub);
         appendKeyValue($table, "audience", decodedToken.audience);
-        appendKeyValue($table, "created", new Date(decodedToken.created).toISOString());
+        appendKeyValue($table, "created", new Date(decodedToken.created).toString());
         appendKeyValue($table, "exp", decodedToken.exp);
 
         $loggedInBody.append($table);
