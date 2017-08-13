@@ -72,7 +72,7 @@ Sorry for that but I'm very busy right now and don't have much time.
 
 ## Interesting projects
 
-* [spring-security-pac4j](https://github.com/pac4j/spring-security-pac4j) a Spring Boot integration for Pac4j (a Java security engine that coveres JWT beside others)
+* [spring-security-pac4j](https://github.com/pac4j/spring-security-pac4j) a Spring Boot integration for Pac4j (a Java security engine that covers JWT beside others)
 
 ## External resources
 
