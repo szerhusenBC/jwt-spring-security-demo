@@ -1,20 +1,16 @@
 package org.zerhusen.security;
 
+import io.jsonwebtoken.ExpiredJwtException;
 import org.assertj.core.util.DateUtil;
-import org.assertj.core.util.Maps;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
-import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.test.util.ReflectionTestUtils;
-import org.springframework.util.ReflectionUtils;
 import org.zerhusen.common.utils.TimeProvider;
 
-import java.lang.reflect.Field;
-import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -28,7 +24,7 @@ import static org.mockito.Mockito.*;
  */
 public class JwtTokenUtilTest {
 
-    private static final String TEST_USER = "testUser";
+    private static final String TEST_USERNAME = "testUser";
 
     @Mock
     private TimeProvider timeProviderMock;
@@ -62,7 +58,7 @@ public class JwtTokenUtilTest {
 
         final String token = createToken();
 
-        assertThat(jwtTokenUtil.getUsernameFromToken(token)).isEqualTo(TEST_USER);
+        assertThat(jwtTokenUtil.getUsernameFromToken(token)).isEqualTo(TEST_USERNAME);
     }
 
     @Test
@@ -72,7 +68,7 @@ public class JwtTokenUtilTest {
 
         final String token = createToken();
 
-        assertThat(jwtTokenUtil.getCreatedDateFromToken(token)).hasSameTimeAs(now);
+        assertThat(jwtTokenUtil.getIssuedAtDateFromToken(token)).isInSameMinuteWindowAs(now);
     }
 
     @Test
@@ -93,22 +89,56 @@ public class JwtTokenUtilTest {
         assertThat(jwtTokenUtil.getAudienceFromToken(token)).isEqualTo(JwtTokenUtil.AUDIENCE_WEB);
     }
 
-    // TODO write tests
-//    @Test
-//    public void canTokenBeRefreshed() throws Exception {
-//    }
-//
-//    @Test
-//    public void refreshToken() throws Exception {
-//    }
-//
-//    @Test
-//    public void validateToken() throws Exception {
-//    }
+    @Test(expected = ExpiredJwtException.class)
+    public void expiredTokenCannotBeRefreshed() throws Exception {
+        when(timeProviderMock.now())
+                .thenReturn(DateUtil.yesterday());
+        String token = createToken();
+        jwtTokenUtil.canTokenBeRefreshed(token, DateUtil.tomorrow());
+    }
+
+    @Test
+    public void changedPasswordCannotBeRefreshed() throws Exception {
+        when(timeProviderMock.now())
+                .thenReturn(DateUtil.now());
+        String token = createToken();
+        assertThat(jwtTokenUtil.canTokenBeRefreshed(token, DateUtil.tomorrow())).isFalse();
+    }
+
+    @Test
+    public void notExpiredCanBeRefreshed() {
+        when(timeProviderMock.now())
+                .thenReturn(DateUtil.now());
+        String token = createToken();
+        assertThat(jwtTokenUtil.canTokenBeRefreshed(token, DateUtil.yesterday())).isTrue();
+    }
+
+    @Test
+    public void canRefreshToken() throws Exception {
+        when(timeProviderMock.now())
+                .thenReturn(DateUtil.now())
+                .thenReturn(DateUtil.tomorrow());
+        String firstToken = createToken();
+        String refreshedToken = jwtTokenUtil.refreshToken(firstToken);
+        Date firstTokenDate = jwtTokenUtil.getIssuedAtDateFromToken(firstToken);
+        Date refreshedTokenDate = jwtTokenUtil.getIssuedAtDateFromToken(refreshedToken);
+        assertThat(firstTokenDate).isBefore(refreshedTokenDate);
+    }
+
+    @Test
+    public void canValidateToken() throws Exception {
+        when(timeProviderMock.now())
+                .thenReturn(DateUtil.now());
+        UserDetails userDetails = mock(JwtUser.class);
+        when(userDetails.getUsername()).thenReturn(TEST_USERNAME);
+
+        String token = createToken();
+        assertThat(jwtTokenUtil.validateToken(token, userDetails)).isTrue();
+    }
 
     private Map<String, Object> createClaims(String creationDate) {
         Map<String, Object> claims = new HashMap();
-        claims.put(JwtTokenUtil.CLAIM_KEY_USERNAME, TEST_USER);
+        claims.put(JwtTokenUtil.CLAIM_KEY_USERNAME, TEST_USERNAME);
         claims.put(JwtTokenUtil.CLAIM_KEY_AUDIENCE, "testAudience");
         claims.put(JwtTokenUtil.CLAIM_KEY_CREATED, DateUtil.parseDatetime(creationDate));
         return claims;
@@ -118,7 +148,7 @@ public class JwtTokenUtilTest {
         final DeviceDummy device = new DeviceDummy();
         device.setNormal(true);
 
-        return jwtTokenUtil.generateToken(new UserDetailsDummy(TEST_USER), device);
+        return jwtTokenUtil.generateToken(new UserDetailsDummy(TEST_USERNAME), device);
     }
 
 }

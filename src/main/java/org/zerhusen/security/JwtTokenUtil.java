@@ -3,6 +3,7 @@ package org.zerhusen.security;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.mobile.device.Device;
@@ -14,16 +15,17 @@ import java.io.Serializable;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.function.Function;
 
 @Component
+@Slf4j
 public class JwtTokenUtil implements Serializable {
 
     private static final long serialVersionUID = -3301605591108950415L;
 
     static final String CLAIM_KEY_USERNAME = "sub";
-    static final String CLAIM_KEY_AUDIENCE = "audience";
-    static final String CLAIM_KEY_CREATED = "created";
-    static final String CLAIM_KEY_EXPIRED = "exp";
+    static final String CLAIM_KEY_AUDIENCE = "aud";
+    static final String CLAIM_KEY_CREATED = "iat";
 
     static final String AUDIENCE_UNKNOWN = "unknown";
     static final String AUDIENCE_WEB = "web";
@@ -40,60 +42,31 @@ public class JwtTokenUtil implements Serializable {
     private Long expiration;
 
     public String getUsernameFromToken(String token) {
-        String username;
-        try {
-            final Claims claims = getClaimsFromToken(token);
-            username = claims.getSubject();
-        } catch (Exception e) {
-            username = null;
-        }
-        return username;
+        return getClaimFromToken(token, Claims::getSubject);
     }
 
-    public Date getCreatedDateFromToken(String token) {
-        Date created;
-        try {
-            final Claims claims = getClaimsFromToken(token);
-            created = new Date((Long) claims.get(CLAIM_KEY_CREATED));
-        } catch (Exception e) {
-            created = null;
-        }
-        return created;
+    public Date getIssuedAtDateFromToken(String token) {
+        return getClaimFromToken(token, Claims::getIssuedAt);
     }
 
     public Date getExpirationDateFromToken(String token) {
-        Date expiration;
-        try {
-            final Claims claims = getClaimsFromToken(token);
-            expiration = claims.getExpiration();
-        } catch (Exception e) {
-            expiration = null;
-        }
-        return expiration;
+        return getClaimFromToken(token, Claims::getExpiration);
     }
 
     public String getAudienceFromToken(String token) {
-        String audience;
-        try {
-            final Claims claims = getClaimsFromToken(token);
-            audience = (String) claims.get(CLAIM_KEY_AUDIENCE);
-        } catch (Exception e) {
-            audience = null;
-        }
-        return audience;
+        return getClaimFromToken(token, Claims::getAudience);
     }
 
-    private Claims getClaimsFromToken(String token) {
-        Claims claims;
-        try {
-            claims = Jwts.parser()
-                    .setSigningKey(secret)
-                    .parseClaimsJws(token)
-                    .getBody();
-        } catch (Exception e) {
-            claims = null;
-        }
-        return claims;
+    public <T> T getClaimFromToken(String token, Function<Claims, T> claimsResolver) {
+        final Claims claims = getAllClaimsFromToken(token);
+        return claimsResolver.apply(claims);
+    }
+
+    private Claims getAllClaimsFromToken(String token) {
+        return Jwts.parser()
+                .setSigningKey(secret)
+                .parseClaimsJws(token)
+                .getBody();
     }
 
     private Boolean isTokenExpired(String token) {
@@ -124,51 +97,48 @@ public class JwtTokenUtil implements Serializable {
 
     public String generateToken(UserDetails userDetails, Device device) {
         Map<String, Object> claims = new HashMap<>();
-
-        claims.put(CLAIM_KEY_USERNAME, userDetails.getUsername());
-        claims.put(CLAIM_KEY_AUDIENCE, generateAudience(device));
-
-        final Date createdDate = timeProvider.now();
-        claims.put(CLAIM_KEY_CREATED, createdDate);
-
-        return doGenerateToken(claims);
+        return doGenerateToken(claims, userDetails.getUsername(), generateAudience(device));
     }
 
-    private String doGenerateToken(Map<String, Object> claims) {
-        final Date createdDate = (Date) claims.get(CLAIM_KEY_CREATED);
+    private String doGenerateToken(Map<String, Object> claims, String subject, String audience) {
+        final Date createdDate = timeProvider.now();
         final Date expirationDate = new Date(createdDate.getTime() + expiration * 1000);
 
         System.out.println("doGenerateToken " + createdDate);
 
         return Jwts.builder()
                 .setClaims(claims)
+                .setSubject(subject)
+                .setAudience(audience)
+                .setIssuedAt(createdDate)
                 .setExpiration(expirationDate)
                 .signWith(SignatureAlgorithm.HS512, secret)
                 .compact();
     }
 
     public Boolean canTokenBeRefreshed(String token, Date lastPasswordReset) {
-        final Date created = getCreatedDateFromToken(token);
+        final Date created = getIssuedAtDateFromToken(token);
         return !isCreatedBeforeLastPasswordReset(created, lastPasswordReset)
                 && (!isTokenExpired(token) || ignoreTokenExpiration(token));
     }
 
     public String refreshToken(String token) {
-        String refreshedToken;
-        try {
-            final Claims claims = getClaimsFromToken(token);
-            claims.put(CLAIM_KEY_CREATED, timeProvider.now());
-            refreshedToken = doGenerateToken(claims);
-        } catch (Exception e) {
-            refreshedToken = null;
-        }
-        return refreshedToken;
+        final Claims claims = getAllClaimsFromToken(token);
+        claims.setIssuedAt(timeProvider.now());
+        return doRefreshToken(claims);
+    }
+
+    public String doRefreshToken(Claims claims) {
+        return Jwts.builder()
+                .setClaims(claims)
+                .signWith(SignatureAlgorithm.HS512, secret)
+                .compact();
     }
 
     public Boolean validateToken(String token, UserDetails userDetails) {
         JwtUser user = (JwtUser) userDetails;
         final String username = getUsernameFromToken(token);
-        final Date created = getCreatedDateFromToken(token);
+        final Date created = getIssuedAtDateFromToken(token);
         //final Date expiration = getExpirationDateFromToken(token);
         return (
                 username.equals(user.getUsername())
