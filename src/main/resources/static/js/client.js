@@ -42,10 +42,10 @@ $(function () {
             error: function (jqXHR, textStatus, errorThrown) {
                 if (jqXHR.status === 401) {
                     $('#loginErrorModal')
-                            .modal("show")
-                            .find(".modal-body")
-                            .empty()
-                            .html("<p>Spring exception:<br>" + jqXHR.responseJSON.exception + "</p>");
+                        .modal("show")
+                        .find(".modal-body")
+                        .empty()
+                        .html("<p>Spring exception:<br>" + jqXHR.responseJSON.exception + "</p>");
                 } else {
                     throw new Error("an unexpected error occured: " + errorThrown);
                 }
@@ -57,8 +57,8 @@ $(function () {
         removeJwtToken();
         $login.show();
         $userInfo
-                .hide()
-                .find("#userInfoBody").empty();
+            .hide()
+            .find("#userInfoBody").empty();
         $loggedIn.hide();
         $loggedInBody.empty();
         $notLoggedIn.show();
@@ -109,10 +109,10 @@ $(function () {
         $loggedInBody.append($("<h4>").text("Token claims"));
 
         var $table = $("<table>")
-                .addClass("table table-striped");
+            .addClass("table table-striped");
         appendKeyValue($table, "sub", decodedToken.sub);
-        appendKeyValue($table, "audience", decodedToken.audience);
-        appendKeyValue($table, "created", new Date(decodedToken.created).toString());
+        appendKeyValue($table, "aud", decodedToken.aud);
+        appendKeyValue($table, "iat", decodedToken.iat);
         appendKeyValue($table, "exp", decodedToken.exp);
 
         $loggedInBody.append($table);
@@ -122,15 +122,15 @@ $(function () {
 
     function appendKeyValue($table, key, value) {
         var $row = $("<tr>")
-                .append($("<td>").text(key))
-                .append($("<td>").text(value));
+            .append($("<td>").text(key))
+            .append($("<td>").text(value));
         $table.append($row);
     }
 
     function showResponse(statusCode, message) {
         $response
-                .empty()
-                .text("status code: " + statusCode + "\n-------------------------\n" + message);
+            .empty()
+            .text("status code: " + statusCode + "\n-------------------------\n" + message);
     }
 
     // REGISTER EVENT LISTENERS =============================================================
@@ -181,8 +181,8 @@ $(function () {
 
     $loggedIn.click(function () {
         $loggedIn
-                .toggleClass("text-hidden")
-                .toggleClass("text-shown");
+            .toggleClass("text-hidden")
+            .toggleClass("text-shown");
     });
 
     // INITIAL CALLS =============================================================
