@@ -67,7 +67,7 @@ $(function () {
     function createAuthorizationTokenHeader() {
         var token = getJwtToken();
         if (token) {
-            return {"Authorization": token};
+            return {"Authorization": "Bearer " + token};
         } else {
             return {};
         }
@@ -102,7 +102,6 @@ $(function () {
     function showTokenInformation() {
         var jwtToken = getJwtToken();
         var decodedToken = jwt_decode(jwtToken);
-        console.log(decodedToken);
 
         $loggedInBody.append($("<h4>").text("Token"));
         $loggedInBody.append($("<div>").text(jwtToken).css("word-break", "break-all"));

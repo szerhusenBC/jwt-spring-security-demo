@@ -81,7 +81,7 @@ public class UserRestControllerTest {
 
         when(this.userDetailsService.loadUserByUsername(eq(user.getUsername()))).thenReturn(jwtUser);
 
-        this.mvc.perform(get("/user"))
+        this.mvc.perform(get("/user").header("Authorization", "Bearer nsodunsodiuv"))
                 .andExpect(status().is2xxSuccessful());
     }
 
