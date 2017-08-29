@@ -122,7 +122,9 @@ public class JwtTokenUtil implements Serializable {
 
     public String refreshToken(String token) {
         final Claims claims = getAllClaimsFromToken(token);
+        final Date expirationDate = new Date(createdDate.getTime() + expiration * 1000);
         claims.setIssuedAt(timeProvider.now());
+        claims.setExpiration(expirationDate)
         return doRefreshToken(claims);
     }
 
