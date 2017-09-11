@@ -1,5 +1,11 @@
 package org.zerhusen.security;
 
+import java.io.Serializable;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.function.Function;
+
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
@@ -9,12 +15,6 @@ import org.springframework.mobile.device.Device;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 import org.zerhusen.common.utils.TimeProvider;
-
-import java.io.Serializable;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.function.Function;
 
 @Component
 public class JwtTokenUtil implements Serializable {
@@ -100,7 +100,7 @@ public class JwtTokenUtil implements Serializable {
 
     private String doGenerateToken(Map<String, Object> claims, String subject, String audience) {
         final Date createdDate = timeProvider.now();
-        final Date expirationDate = new Date(createdDate.getTime() + expiration * 1000);
+        final Date expirationDate = calculateExpirationDate(createdDate);
 
         System.out.println("doGenerateToken " + createdDate);
 
@@ -121,14 +121,13 @@ public class JwtTokenUtil implements Serializable {
     }
 
     public String refreshToken(String token) {
-        final Claims claims = getAllClaimsFromToken(token);
-        final Date expirationDate = new Date(createdDate.getTime() + expiration * 1000);
-        claims.setIssuedAt(timeProvider.now());
-        claims.setExpiration(expirationDate)
-        return doRefreshToken(claims);
-    }
+        final Date createdDate = timeProvider.now();
+        final Date expirationDate = calculateExpirationDate(createdDate);
 
-    public String doRefreshToken(Claims claims) {
+        final Claims claims = getAllClaimsFromToken(token);
+        claims.setIssuedAt(createdDate);
+        claims.setExpiration(expirationDate);
+
         return Jwts.builder()
                 .setClaims(claims)
                 .signWith(SignatureAlgorithm.HS512, secret)
@@ -141,8 +140,13 @@ public class JwtTokenUtil implements Serializable {
         final Date created = getIssuedAtDateFromToken(token);
         //final Date expiration = getExpirationDateFromToken(token);
         return (
-                username.equals(user.getUsername())
-                        && !isTokenExpired(token)
-                        && !isCreatedBeforeLastPasswordReset(created, user.getLastPasswordResetDate()));
+              username.equals(user.getUsername())
+                    && !isTokenExpired(token)
+                    && !isCreatedBeforeLastPasswordReset(created, user.getLastPasswordResetDate())
+        );
+    }
+
+    private Date calculateExpirationDate(Date createdDate) {
+        return new Date(createdDate.getTime() + expiration * 1000);
     }
 }
