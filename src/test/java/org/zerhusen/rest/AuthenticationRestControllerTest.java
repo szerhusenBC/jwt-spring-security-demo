@@ -97,7 +97,8 @@ public class AuthenticationRestControllerTest {
 
         when(this.jwtTokenUtil.canTokenBeRefreshed(any(), any())).thenReturn(true);
 
-        this.mvc.perform(get("/refresh"))
+        this.mvc.perform(get("/refresh")
+                .header("Authorization", "Bearer 5d1103e-b3e1-4ae9-b606-46c9c1bc915a"))
                 .andExpect(status().is2xxSuccessful());
     }
 
@@ -124,7 +125,8 @@ public class AuthenticationRestControllerTest {
 
         when(this.jwtTokenUtil.canTokenBeRefreshed(any(), any())).thenReturn(true);
 
-        this.mvc.perform(get("/refresh"))
+        this.mvc.perform(get("/refresh")
+                .header("Authorization", "Bearer 5d1103e-b3e1-4ae9-b606-46c9c1bc915a"))
                 .andExpect(status().is2xxSuccessful());
     }
 
