@@ -47,7 +47,8 @@
         <jacoco.version>0.7.9</jacoco.version>
 
         <maven-compiler-plugin.version>3.6.1</maven-compiler-plugin.version>
-        <findbugs-maven-plugin.version>3.0.4</findbugs-maven-plugin.version>
+        <findbugs-maven-plugin.version>3.0.5</findbugs-maven-plugin.version>
+        <findbugs.annotations.version>3.0.1</findbugs.annotations.version>
         <docker-maven-plugin.version>0.4.13</docker-maven-plugin.version>
     </properties>
 
@@ -79,6 +80,12 @@
             <groupId>io.jsonwebtoken</groupId>
             <artifactId>jjwt</artifactId>
             <version>${jjwt.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.google.code.findbugs</groupId>
+            <artifactId>findbugs</artifactId>
+            <version>${findbugs.annotations.version}</version>
         </dependency>
 
         <dependency>

@@ -6,15 +6,16 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Function;
 
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.Clock;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
-import org.springframework.beans.factory.annotation.Autowired;
+import io.jsonwebtoken.impl.DefaultClock;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.mobile.device.Device;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
-import org.zerhusen.common.utils.TimeProvider;
 
 @Component
 public class JwtTokenUtil implements Serializable {
@@ -30,8 +31,8 @@ public class JwtTokenUtil implements Serializable {
     static final String AUDIENCE_MOBILE = "mobile";
     static final String AUDIENCE_TABLET = "tablet";
 
-    @Autowired
-    private TimeProvider timeProvider;
+    @SuppressFBWarnings(value = "SE_BAD_FIELD", justification = "It's okay here")
+    private Clock clock = DefaultClock.INSTANCE;
 
     @Value("${jwt.secret}")
     private String secret;
@@ -69,7 +70,7 @@ public class JwtTokenUtil implements Serializable {
 
     private Boolean isTokenExpired(String token) {
         final Date expiration = getExpirationDateFromToken(token);
-        return expiration.before(timeProvider.now());
+        return expiration.before(clock.now());
     }
 
     private Boolean isCreatedBeforeLastPasswordReset(Date created, Date lastPasswordReset) {
@@ -99,7 +100,7 @@ public class JwtTokenUtil implements Serializable {
     }
 
     private String doGenerateToken(Map<String, Object> claims, String subject, String audience) {
-        final Date createdDate = timeProvider.now();
+        final Date createdDate = clock.now();
         final Date expirationDate = calculateExpirationDate(createdDate);
 
         System.out.println("doGenerateToken " + createdDate);
@@ -121,7 +122,7 @@ public class JwtTokenUtil implements Serializable {
     }
 
     public String refreshToken(String token) {
-        final Date createdDate = timeProvider.now();
+        final Date createdDate = clock.now();
         final Date expirationDate = calculateExpirationDate(createdDate);
 
         final Claims claims = getAllClaimsFromToken(token);
