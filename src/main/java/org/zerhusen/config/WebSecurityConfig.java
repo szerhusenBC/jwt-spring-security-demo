@@ -70,6 +70,10 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                         "/**/*.css",
                         "/**/*.js"
                 ).permitAll()
+
+                // Un-secure H2 Database
+                .antMatchers("/h2-console/**/**").permitAll()
+
                 .antMatchers("/auth/**").permitAll()
                 .anyRequest().authenticated();
 
@@ -78,6 +82,9 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .addFilterBefore(authenticationTokenFilterBean(), UsernamePasswordAuthenticationFilter.class);
 
         // disable page caching
-        httpSecurity.headers().cacheControl();
+        httpSecurity
+                .headers()
+                .frameOptions().sameOrigin()  // required to set for H2 else H2 Console will be blank.
+                .cacheControl();
     }
 }
