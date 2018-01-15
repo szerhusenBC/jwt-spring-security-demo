@@ -13,7 +13,7 @@ spring:
       enabled: true
 
   datasource:
-    url: jdbc:h2:~/test;DB_CLOSE_ON_EXIT=FALSE
+    url: jdbc:h2:mem:datasource;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE
     driverClassName: org.h2.Driver
     username: sa
     password:
