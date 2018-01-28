@@ -1,12 +1,14 @@
 package org.zerhusen.config;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
@@ -40,6 +42,13 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
+    
+    @Bean
+    public FilterRegistrationBean filterRegistrationBeanForTokenAuthenticationFilter() throws Exception{
+    	FilterRegistrationBean filterRegistrationBean = new FilterRegistrationBean(authenticationTokenFilterBean());
+    	filterRegistrationBean.setEnabled(false);
+    	return filterRegistrationBean;
+    }
 
     @Bean
     public JwtAuthenticationTokenFilter authenticationTokenFilterBean() throws Exception {
@@ -56,25 +65,9 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
                 // don't create session
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()
-
+                
                 .authorizeRequests()
-                //.antMatchers(HttpMethod.OPTIONS, "/**").permitAll()
-
-                // allow anonymous resource requests
-                .antMatchers(
-                        HttpMethod.GET,
-                        "/",
-                        "/*.html",
-                        "/favicon.ico",
-                        "/**/*.html",
-                        "/**/*.css",
-                        "/**/*.js"
-                ).permitAll()
-
-                // Un-secure H2 Database
-                .antMatchers("/h2-console/**/**").permitAll()
-
-                .antMatchers("/auth/**").permitAll()
+                                             
                 .anyRequest().authenticated();
 
         // Custom JWT based security filter
@@ -87,4 +80,21 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .frameOptions().sameOrigin()  // required to set for H2 else H2 Console will be blank.
                 .cacheControl();
     }
+    
+    @Override
+    public void configure(WebSecurity web) throws Exception {
+    	web.ignoring().antMatchers(
+                HttpMethod.GET,
+                "/",
+                "/*.html",
+                "/favicon.ico",
+                "/**/*.html",
+                "/**/*.css",
+                "/**/*.js"
+        );
+    	
+    	web.ignoring().antMatchers("/h2-console/**/**");
+    	web.ignoring().antMatchers("/auth/**");
+    }
+        
 }
