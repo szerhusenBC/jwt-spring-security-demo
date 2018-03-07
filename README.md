@@ -73,6 +73,7 @@ Sorry for that but I'm very busy right now and don't have much time.
 ## Interesting projects
 
 * [spring-security-pac4j](https://github.com/pac4j/spring-security-pac4j) a Spring Boot integration for Pac4j (a Java security engine that covers JWT beside others)
+* For more complex microservice environments take a look here: [Using JWT with Spring Security OAuth](http://www.baeldung.com/spring-security-oauth-jwt)
 
 ## External resources
 
