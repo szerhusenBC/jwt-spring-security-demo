@@ -17,7 +17,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.zerhusen.security.JwtAuthenticationEntryPoint;
-import org.zerhusen.security.JwtAuthenticationTokenFilter;
+import org.zerhusen.security.JwtAuthorizationTokenFilter;
 import org.zerhusen.security.JwtTokenUtil;
 import org.zerhusen.security.service.JwtUserDetailsService;
 
@@ -79,7 +79,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
             .anyRequest().authenticated();
 
         // Custom JWT based security filter
-        JwtAuthenticationTokenFilter authenticationTokenFilter = new JwtAuthenticationTokenFilter(userDetailsService(), jwtTokenUtil, tokenHeader);
+        JwtAuthorizationTokenFilter authenticationTokenFilter = new JwtAuthorizationTokenFilter(userDetailsService(), jwtTokenUtil, tokenHeader);
         httpSecurity
             .addFilterBefore(authenticationTokenFilter, UsernamePasswordAuthenticationFilter.class);
 
