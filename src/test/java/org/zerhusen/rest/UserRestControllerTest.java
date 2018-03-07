@@ -1,12 +1,15 @@
 package org.zerhusen.rest;
 
+import java.util.Arrays;
+import java.util.Date;
+import java.util.List;
+
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
@@ -18,10 +21,7 @@ import org.zerhusen.model.security.User;
 import org.zerhusen.security.JwtTokenUtil;
 import org.zerhusen.security.JwtUser;
 import org.zerhusen.security.JwtUserFactory;
-
-import java.util.Arrays;
-import java.util.Date;
-import java.util.List;
+import org.zerhusen.security.service.JwtUserDetailsService;
 
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.eq;
@@ -43,7 +43,7 @@ public class UserRestControllerTest {
     private JwtTokenUtil jwtTokenUtil;
 
     @MockBean
-    private UserDetailsService userDetailsService;
+    private JwtUserDetailsService jwtUserDetailsService;
 
     @Before
     public void setup() {
@@ -56,7 +56,7 @@ public class UserRestControllerTest {
     @Test
     public void shouldGetUnauthorizedWithoutRole() throws Exception {
 
-        this.mvc.perform(get("/user"))
+        mvc.perform(get("/user"))
                 .andExpect(status().isUnauthorized());
     }
 
@@ -77,11 +77,11 @@ public class UserRestControllerTest {
 
         JwtUser jwtUser = JwtUserFactory.create(user);
 
-        when(this.jwtTokenUtil.getUsernameFromToken(any())).thenReturn(user.getUsername());
+        when(jwtTokenUtil.getUsernameFromToken(any())).thenReturn(user.getUsername());
 
-        when(this.userDetailsService.loadUserByUsername(eq(user.getUsername()))).thenReturn(jwtUser);
+        when(jwtUserDetailsService.loadUserByUsername(eq(user.getUsername()))).thenReturn(jwtUser);
 
-        this.mvc.perform(get("/user").header("Authorization", "Bearer nsodunsodiuv"))
+        mvc.perform(get("/user").header("Authorization", "Bearer nsodunsodiuv"))
                 .andExpect(status().is2xxSuccessful());
     }
 

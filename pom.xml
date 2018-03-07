@@ -35,7 +35,7 @@
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
-        <version>1.5.9.RELEASE</version>
+        <version>2.0.0.RELEASE</version>
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
 
@@ -43,13 +43,13 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <java.version>1.8</java.version>
 
-        <jjwt.version>0.7.0</jjwt.version>
+        <jjwt.version>0.9.0</jjwt.version>
         <jacoco.version>0.7.9</jacoco.version>
 
-        <maven-compiler-plugin.version>3.6.1</maven-compiler-plugin.version>
+        <maven-compiler-plugin.version>3.7.0</maven-compiler-plugin.version>
         <findbugs-maven-plugin.version>3.0.5</findbugs-maven-plugin.version>
-        <findbugs.annotations.version>3.0.1</findbugs.annotations.version>
-        <docker-maven-plugin.version>0.4.13</docker-maven-plugin.version>
+        <findbugs.version>3.0.1</findbugs.version>
+        <docker-maven-plugin.version>1.0.0</docker-maven-plugin.version>
     </properties>
 
     <dependencies>
@@ -60,10 +60,6 @@
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-data-rest</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-mobile</artifactId>
         </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
@@ -85,7 +81,7 @@
         <dependency>
             <groupId>com.google.code.findbugs</groupId>
             <artifactId>findbugs</artifactId>
-            <version>${findbugs.annotations.version}</version>
+            <version>${findbugs.version}</version>
         </dependency>
 
         <dependency>

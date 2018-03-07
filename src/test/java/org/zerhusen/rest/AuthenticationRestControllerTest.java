@@ -1,5 +1,9 @@
 package org.zerhusen.rest;
 
+import java.util.Arrays;
+import java.util.Date;
+import java.util.List;
+
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.Before;
 import org.junit.Test;
@@ -9,7 +13,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.test.context.support.WithAnonymousUser;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.junit4.SpringRunner;
@@ -23,10 +26,7 @@ import org.zerhusen.security.JwtAuthenticationRequest;
 import org.zerhusen.security.JwtTokenUtil;
 import org.zerhusen.security.JwtUser;
 import org.zerhusen.security.JwtUserFactory;
-
-import java.util.Arrays;
-import java.util.Date;
-import java.util.List;
+import org.zerhusen.security.service.JwtUserDetailsService;
 
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.eq;
@@ -52,14 +52,14 @@ public class AuthenticationRestControllerTest {
     private JwtTokenUtil jwtTokenUtil;
 
     @MockBean
-    private UserDetailsService userDetailsService;
+    private JwtUserDetailsService jwtUserDetailsService;
 
     @Before
     public void setup() {
         mvc = MockMvcBuilders
-                .webAppContextSetup(context)
-                .apply(springSecurity())
-                .build();
+            .webAppContextSetup(context)
+            .apply(springSecurity())
+            .build();
     }
 
     @Test
@@ -68,10 +68,10 @@ public class AuthenticationRestControllerTest {
 
         JwtAuthenticationRequest jwtAuthenticationRequest = new JwtAuthenticationRequest("user", "password");
 
-        this.mvc.perform(post("/auth")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(new ObjectMapper().writeValueAsString(jwtAuthenticationRequest)))
-                .andExpect(status().is2xxSuccessful());
+        mvc.perform(post("/auth")
+            .contentType(MediaType.APPLICATION_JSON)
+            .content(new ObjectMapper().writeValueAsString(jwtAuthenticationRequest)))
+            .andExpect(status().is2xxSuccessful());
     }
 
     @Test
@@ -91,15 +91,15 @@ public class AuthenticationRestControllerTest {
 
         JwtUser jwtUser = JwtUserFactory.create(user);
 
-        when(this.jwtTokenUtil.getUsernameFromToken(any())).thenReturn(user.getUsername());
+        when(jwtTokenUtil.getUsernameFromToken(any())).thenReturn(user.getUsername());
 
-        when(this.userDetailsService.loadUserByUsername(eq(user.getUsername()))).thenReturn(jwtUser);
+        when(jwtUserDetailsService.loadUserByUsername(eq(user.getUsername()))).thenReturn(jwtUser);
 
-        when(this.jwtTokenUtil.canTokenBeRefreshed(any(), any())).thenReturn(true);
+        when(jwtTokenUtil.canTokenBeRefreshed(any(), any())).thenReturn(true);
 
-        this.mvc.perform(get("/refresh")
-                .header("Authorization", "Bearer 5d1103e-b3e1-4ae9-b606-46c9c1bc915a"))
-                .andExpect(status().is2xxSuccessful());
+        mvc.perform(get("/refresh")
+            .header("Authorization", "Bearer 5d1103e-b3e1-4ae9-b606-46c9c1bc915a"))
+            .andExpect(status().is2xxSuccessful());
     }
 
     @Test
@@ -119,25 +119,23 @@ public class AuthenticationRestControllerTest {
 
         JwtUser jwtUser = JwtUserFactory.create(user);
 
-        when(this.jwtTokenUtil.getUsernameFromToken(any())).thenReturn(user.getUsername());
+        when(jwtTokenUtil.getUsernameFromToken(any())).thenReturn(user.getUsername());
 
-        when(this.userDetailsService.loadUserByUsername(eq(user.getUsername()))).thenReturn(jwtUser);
+        when(jwtUserDetailsService.loadUserByUsername(eq(user.getUsername()))).thenReturn(jwtUser);
 
-        when(this.jwtTokenUtil.canTokenBeRefreshed(any(), any())).thenReturn(true);
+        when(jwtTokenUtil.canTokenBeRefreshed(any(), any())).thenReturn(true);
 
-        this.mvc.perform(get("/refresh")
-                .header("Authorization", "Bearer 5d1103e-b3e1-4ae9-b606-46c9c1bc915a"))
-                .andExpect(status().is2xxSuccessful());
+        mvc.perform(get("/refresh")
+            .header("Authorization", "Bearer 5d1103e-b3e1-4ae9-b606-46c9c1bc915a"))
+            .andExpect(status().is2xxSuccessful());
     }
 
     @Test
     @WithAnonymousUser
     public void shouldGetUnauthorizedWithAnonymousUser() throws Exception {
 
-        this.mvc.perform(get("/refresh"))
-                .andExpect(status().isUnauthorized());
-
+        mvc.perform(get("/refresh"))
+            .andExpect(status().isUnauthorized());
     }
-
 }
 

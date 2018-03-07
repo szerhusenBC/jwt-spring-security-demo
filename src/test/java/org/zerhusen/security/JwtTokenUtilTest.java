@@ -1,8 +1,6 @@
 package org.zerhusen.security;
 
 import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
 
 import io.jsonwebtoken.Clock;
 import io.jsonwebtoken.ExpiredJwtException;
@@ -20,9 +18,6 @@ import static org.assertj.core.api.Assertions.within;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-/**
- * Created by stephan on 10.09.16.
- */
 public class JwtTokenUtilTest {
 
     private static final String TEST_USERNAME = "testUser";
@@ -44,8 +39,8 @@ public class JwtTokenUtilTest {
     @Test
     public void testGenerateTokenGeneratesDifferentTokensForDifferentCreationDates() throws Exception {
         when(clockMock.now())
-                .thenReturn(DateUtil.yesterday())
-                .thenReturn(DateUtil.now());
+            .thenReturn(DateUtil.yesterday())
+            .thenReturn(DateUtil.now());
 
         final String token = createToken();
         final String laterToken = createToken();
@@ -82,18 +77,10 @@ public class JwtTokenUtilTest {
         assertThat(DateUtil.timeDifference(expirationDateFromToken, now)).isCloseTo(3600000L, within(1000L));
     }
 
-    @Test
-    public void getAudienceFromToken() throws Exception {
-        when(clockMock.now()).thenReturn(DateUtil.now());
-        final String token = createToken();
-
-        assertThat(jwtTokenUtil.getAudienceFromToken(token)).isEqualTo(JwtTokenUtil.AUDIENCE_WEB);
-    }
-
     @Test(expected = ExpiredJwtException.class)
     public void expiredTokenCannotBeRefreshed() throws Exception {
         when(clockMock.now())
-                .thenReturn(DateUtil.yesterday());
+            .thenReturn(DateUtil.yesterday());
         String token = createToken();
         jwtTokenUtil.canTokenBeRefreshed(token, DateUtil.tomorrow());
     }
@@ -101,7 +88,7 @@ public class JwtTokenUtilTest {
     @Test
     public void changedPasswordCannotBeRefreshed() throws Exception {
         when(clockMock.now())
-                .thenReturn(DateUtil.now());
+            .thenReturn(DateUtil.now());
         String token = createToken();
         assertThat(jwtTokenUtil.canTokenBeRefreshed(token, DateUtil.tomorrow())).isFalse();
     }
@@ -109,7 +96,7 @@ public class JwtTokenUtilTest {
     @Test
     public void notExpiredCanBeRefreshed() {
         when(clockMock.now())
-                .thenReturn(DateUtil.now());
+            .thenReturn(DateUtil.now());
         String token = createToken();
         assertThat(jwtTokenUtil.canTokenBeRefreshed(token, DateUtil.yesterday())).isTrue();
     }
@@ -117,8 +104,8 @@ public class JwtTokenUtilTest {
     @Test
     public void canRefreshToken() throws Exception {
         when(clockMock.now())
-                .thenReturn(DateUtil.now())
-                .thenReturn(DateUtil.tomorrow());
+            .thenReturn(DateUtil.now())
+            .thenReturn(DateUtil.tomorrow());
         String firstToken = createToken();
         String refreshedToken = jwtTokenUtil.refreshToken(firstToken);
         Date firstTokenDate = jwtTokenUtil.getIssuedAtDateFromToken(firstToken);
@@ -129,7 +116,7 @@ public class JwtTokenUtilTest {
     @Test
     public void canValidateToken() throws Exception {
         when(clockMock.now())
-                .thenReturn(DateUtil.now());
+            .thenReturn(DateUtil.now());
         UserDetails userDetails = mock(JwtUser.class);
         when(userDetails.getUsername()).thenReturn(TEST_USERNAME);
 
@@ -137,19 +124,7 @@ public class JwtTokenUtilTest {
         assertThat(jwtTokenUtil.validateToken(token, userDetails)).isTrue();
     }
 
-    private Map<String, Object> createClaims(String creationDate) {
-        Map<String, Object> claims = new HashMap();
-        claims.put(JwtTokenUtil.CLAIM_KEY_USERNAME, TEST_USERNAME);
-        claims.put(JwtTokenUtil.CLAIM_KEY_AUDIENCE, "testAudience");
-        claims.put(JwtTokenUtil.CLAIM_KEY_CREATED, DateUtil.parseDatetime(creationDate));
-        return claims;
-    }
-
     private String createToken() {
-        final DeviceDummy device = new DeviceDummy();
-        device.setNormal(true);
-
-        return jwtTokenUtil.generateToken(new UserDetailsDummy(TEST_USERNAME), device);
+        return jwtTokenUtil.generateToken(new UserDetailsDummy(TEST_USERNAME));
     }
-
 }
