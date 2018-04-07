@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 import org.zerhusen.security.JwtAuthenticationRequest;
+import org.zerhusen.security.JwtTokenExtractor;
 import org.zerhusen.security.JwtTokenUtil;
 import org.zerhusen.security.JwtUser;
 import org.zerhusen.security.service.JwtAuthenticationResponse;
@@ -39,6 +40,9 @@ public class AuthenticationRestController {
     @Autowired
     @Qualifier("jwtUserDetailsService")
     private UserDetailsService userDetailsService;
+    
+    @Autowired
+    private JwtTokenExtractor tokenExtractor;
 
     @RequestMapping(value = "${jwt.route.authentication.path}", method = RequestMethod.POST)
     public ResponseEntity<?> createAuthenticationToken(@RequestBody JwtAuthenticationRequest authenticationRequest) throws AuthenticationException {
@@ -56,7 +60,7 @@ public class AuthenticationRestController {
     @RequestMapping(value = "${jwt.route.authentication.refresh}", method = RequestMethod.GET)
     public ResponseEntity<?> refreshAndGetAuthenticationToken(HttpServletRequest request) {
         String authToken = request.getHeader(tokenHeader);
-        final String token = authToken.substring(7);
+        final String token = tokenExtractor.extract(authToken);
         String username = jwtTokenUtil.getUsernameFromToken(token);
         JwtUser user = (JwtUser) userDetailsService.loadUserByUsername(username);
 
