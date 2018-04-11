@@ -60,6 +60,10 @@ spring:
 
 You can find a reference of all application properties [here](http://docs.spring.io/spring-boot/docs/current/reference/html/common-application-properties.html).
 
+### Using Flyway
+
+https://github.com/szerhusenBC/jwt-spring-security-demo/issues/81
+
 ## Docker
 This project has a docker image. You can find it at [https://hub.docker.com/r/hubae/jwt-spring-security-demo/](https://hub.docker.com/r/hubae/jwt-spring-security-demo/).
 
