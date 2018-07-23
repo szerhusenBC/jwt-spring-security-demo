@@ -11,6 +11,8 @@ $(function () {
     var $response = $("#response");
     var $login = $("#login");
     var $userInfo = $("#userInfo").hide();
+    var pathname = window.location.pathname;
+
 
     // FUNCTIONS =============================================================
     function getJwtToken() {
@@ -27,7 +29,7 @@ $(function () {
 
     function doLogin(loginData) {
         $.ajax({
-            url: "/auth",
+            url: pathname + "auth",
             type: "POST",
             data: JSON.stringify(loginData),
             contentType: "application/json; charset=utf-8",
@@ -76,7 +78,7 @@ $(function () {
 
     function showUserInformation() {
         $.ajax({
-            url: "/user",
+            url: pathname + "user",
             type: "GET",
             contentType: "application/json; charset=utf-8",
             dataType: "json",
@@ -96,6 +98,14 @@ $(function () {
 
                 $userInfoBody.append($authorities);
                 $userInfo.show();
+            },
+            error: function (jqXHR, textStatus, errorThrown) {
+                if (jqXHR.status === 401 || jqXHR.status === 500) {
+                    doLogout();
+                }
+                else {
+                    throw new Error("an unexpected error occured: " + errorThrown);
+                }
             }
         });
     }
@@ -149,7 +159,7 @@ $(function () {
 
     $("#exampleServiceBtn").click(function () {
         $.ajax({
-            url: "/persons",
+            url: pathname + "persons",
             type: "GET",
             contentType: "application/json; charset=utf-8",
             dataType: "json",
@@ -165,7 +175,7 @@ $(function () {
 
     $("#adminServiceBtn").click(function () {
         $.ajax({
-            url: "/protected",
+            url: pathname + "protected",
             type: "GET",
             contentType: "application/json; charset=utf-8",
             headers: createAuthorizationTokenHeader(),
