@@ -18,7 +18,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.zerhusen.security.JwtAuthenticationEntryPoint;
 import org.zerhusen.security.JwtAuthorizationTokenFilter;
-import org.zerhusen.security.JwtTokenUtil;
 import org.zerhusen.security.service.JwtUserDetailsService;
 
 @Configuration
@@ -30,10 +29,11 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     private JwtAuthenticationEntryPoint unauthorizedHandler;
 
     @Autowired
-    private JwtTokenUtil jwtTokenUtil;
-
-    @Autowired
     private JwtUserDetailsService jwtUserDetailsService;
+
+    // Custom JWT based security filter
+    @Autowired
+    JwtAuthorizationTokenFilter authenticationTokenFilter;
 
     @Value("${jwt.header}")
     private String tokenHeader;
@@ -78,9 +78,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
             .antMatchers("/auth/**").permitAll()
             .anyRequest().authenticated();
 
-        // Custom JWT based security filter
-        JwtAuthorizationTokenFilter authenticationTokenFilter = new JwtAuthorizationTokenFilter(userDetailsService(), jwtTokenUtil, tokenHeader);
-        httpSecurity
+       httpSecurity
             .addFilterBefore(authenticationTokenFilter, UsernamePasswordAuthenticationFilter.class);
 
         // disable page caching
