@@ -9,7 +9,7 @@ import org.zerhusen.model.security.User;
 import org.zerhusen.security.JwtUserFactory;
 import org.zerhusen.security.repository.UserRepository;
 
-@Service
+@Service("jwtUserDetailsService")
 public class JwtUserDetailsService implements UserDetailsService {
 
     @Autowired
