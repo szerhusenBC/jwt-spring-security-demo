@@ -21,7 +21,7 @@ import java.io.IOException;
  *
  * Compatible with spring-webmvc 4.3.3.
  *
- * Based on org.zalando.problem.spring.web.advice.security.SecurityProblemSupport
+ * Copied from org.zalando.problem.spring.web.advice.security.SecurityProblemSupport
  *
  * @see WebMvcConfigurationSupport#handlerExceptionResolver()
  */
