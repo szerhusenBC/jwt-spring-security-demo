@@ -10,8 +10,12 @@ spring:
 
 jwt:
   header: Authorization
-  secret: mySecret
-  expiration: 604800
+  # This token must be encoded using Base64 (you can type `echo 'secret-key'|base64` on your command line)
+  base64-secret: c2VjcmV0LWtleQo=
+  # token is valid 24 hours
+  token-validity-in-seconds: 86400
+  // valid 30 hours
+  token-validity-in-seconds-for-remember-me: 108000
   route:
     authentication:
       path: auth
