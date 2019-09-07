@@ -1,4 +1,4 @@
-package org.zerhusen.security.controller;
+package org.zerhusen.rest;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;

@@ -9,7 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @RestController
-public class PersonRestService {
+public class PersonRestController {
     private static final List<Person> persons;
 
     static {
