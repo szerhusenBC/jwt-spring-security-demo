@@ -23,13 +23,13 @@ import javax.validation.Valid;
  */
 @RestController
 @RequestMapping("/api")
-public class UserJwtController {
+public class UserJwtRestController {
 
    private final TokenProvider tokenProvider;
 
    private final AuthenticationManagerBuilder authenticationManagerBuilder;
 
-   public UserJwtController(TokenProvider tokenProvider, AuthenticationManagerBuilder authenticationManagerBuilder) {
+   public UserJwtRestController(TokenProvider tokenProvider, AuthenticationManagerBuilder authenticationManagerBuilder) {
       this.tokenProvider = tokenProvider;
       this.authenticationManagerBuilder = authenticationManagerBuilder;
    }

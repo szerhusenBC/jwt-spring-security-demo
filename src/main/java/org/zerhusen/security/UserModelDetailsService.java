@@ -21,20 +21,20 @@ import java.util.stream.Collectors;
  * Authenticate a user from the database.
  */
 @Component("userDetailsService")
-public class DomainUserDetailsService implements UserDetailsService {
+public class UserModelDetailsService implements UserDetailsService {
 
-   private final Logger log = LoggerFactory.getLogger(DomainUserDetailsService.class);
+   private final Logger log = LoggerFactory.getLogger(UserModelDetailsService.class);
 
    private final UserRepository userRepository;
 
-   public DomainUserDetailsService(UserRepository userRepository) {
+   public UserModelDetailsService(UserRepository userRepository) {
       this.userRepository = userRepository;
    }
 
    @Override
    @Transactional
    public UserDetails loadUserByUsername(final String login) {
-      log.debug("Authenticating {}", login);
+      log.debug("Authenticating user '{}'", login);
 
       if (new EmailValidator().isValid(login, null)) {
          return userRepository.findOneWithAuthoritiesByEmailIgnoreCase(login)

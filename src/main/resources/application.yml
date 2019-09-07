@@ -17,6 +17,10 @@ spring:
       # URL: jdbc:h2:mem:testdb
       enabled: true
 
+  devtools:
+    restart:
+      enabled: true
+
 jwt:
   header: Authorization
   # This token must be encoded using Base64 with mininum 88 Bits (you can type `echo 'secret-key'|base64` on your command line)
@@ -30,8 +34,9 @@ jwt:
       path: auth
       refresh: refresh
 
-#logging:
-#  level:
+logging:
+  level:
+    org.zerhusen.security: DEBUG
 #    org.springframework:
 #      security: DEBUG
 #    org.hibernate: DEBUG

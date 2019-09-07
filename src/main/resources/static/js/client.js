@@ -26,13 +26,13 @@ $(function () {
 
     function doLogin(loginData) {
         $.ajax({
-            url: "/auth",
+            url: "/api/authenticate",
             type: "POST",
             data: JSON.stringify(loginData),
             contentType: "application/json; charset=utf-8",
             dataType: "json",
             success: function (data, textStatus, jqXHR) {
-                setJwtToken(data.token);
+                setJwtToken(data.id_token);
                 $login.hide();
                 $notLoggedIn.hide();
                 showTokenInformation()
@@ -76,7 +76,7 @@ $(function () {
 
     function showUserInformation() {
         $.ajax({
-            url: "/user",
+            url: "/api/user",
             type: "GET",
             contentType: "application/json; charset=utf-8",
             dataType: "json",

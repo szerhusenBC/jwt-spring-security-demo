@@ -5,6 +5,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
+import org.zerhusen.security.AuthoritiesConstants;
 
 @RestController
 @RequestMapping("protected")
@@ -16,8 +17,8 @@ public class MethodProtectedRestController {
      * 'ROLE_' prefix on all role names. So 'ADMIN' here is actually stored as 'ROLE_ADMIN' in database!
      **/
     @RequestMapping(method = RequestMethod.GET)
-    @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<?> getProtectedGreeting() {
+    @PreAuthorize("hasRole(\"" + AuthoritiesConstants.ADMIN + "\")")
+    public ResponseEntity<?> getAdminProtectedGreeting() {
         return ResponseEntity.ok("Greetings from admin protected method!");
     }
 

@@ -1,5 +1,6 @@
 package org.zerhusen.config;
 
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Import;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
@@ -8,6 +9,8 @@ import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.filter.CorsFilter;
 import org.zerhusen.security.SecurityProblemSupport;
@@ -34,6 +37,15 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
       this.problemSupport = problemSupport;
    }
 
+   // Configure BCrypt password encoder =====================================================================
+
+   @Bean
+   public PasswordEncoder passwordEncoder() {
+      return new BCryptPasswordEncoder();
+   }
+
+   // Configure paths and requests that should be ignored by Spring Security ================================
+
    @Override
    public void configure(WebSecurity web) {
       web.ignoring()
@@ -51,6 +63,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
             "/h2-console/**"
          );
    }
+
+   // Configure security settings ===========================================================================
 
    @Override
    protected void configure(HttpSecurity httpSecurity) throws Exception {
