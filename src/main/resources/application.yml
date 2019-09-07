@@ -2,7 +2,7 @@
 server:
   contextPath:
 
-# JACKSON
+# better readable jackson serialization format
 spring:
   jackson:
     serialization:
