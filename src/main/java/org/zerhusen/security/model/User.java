@@ -1,4 +1,4 @@
-package org.zerhusen.model.security;
+package org.zerhusen.security.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.hibernate.annotations.BatchSize;

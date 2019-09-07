@@ -1,4 +1,4 @@
-package org.zerhusen.model.security;
+package org.zerhusen.security.model;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;

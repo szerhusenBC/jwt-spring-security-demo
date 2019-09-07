@@ -1,4 +1,4 @@
-package org.zerhusen.rest;
+package org.zerhusen.security.rest;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import org.springframework.http.HttpHeaders;
@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import org.zerhusen.rest.dto.LoginDto;
+import org.zerhusen.security.rest.dto.LoginDto;
 import org.zerhusen.security.jwt.JWTFilter;
 import org.zerhusen.security.jwt.TokenProvider;
 

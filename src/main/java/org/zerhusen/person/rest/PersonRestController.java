@@ -1,4 +1,4 @@
-package org.zerhusen.rest;
+package org.zerhusen.person.rest;
 
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;

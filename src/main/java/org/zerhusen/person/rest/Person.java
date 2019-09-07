@@ -1,4 +1,4 @@
-package org.zerhusen.rest;
+package org.zerhusen.person.rest;
 
 /**
  * Created by stephan on 11.03.16.

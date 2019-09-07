@@ -10,7 +10,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
-import org.zerhusen.model.security.User;
+import org.zerhusen.security.model.User;
 import org.zerhusen.security.repository.UserRepository;
 
 import java.util.List;

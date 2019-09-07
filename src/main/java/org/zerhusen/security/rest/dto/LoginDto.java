@@ -1,4 +1,4 @@
-package org.zerhusen.rest.dto;
+package org.zerhusen.security.rest.dto;
 
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;

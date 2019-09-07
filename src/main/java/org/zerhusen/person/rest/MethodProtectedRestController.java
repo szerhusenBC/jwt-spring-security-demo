@@ -1,4 +1,4 @@
-package org.zerhusen.rest;
+package org.zerhusen.person.rest;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
