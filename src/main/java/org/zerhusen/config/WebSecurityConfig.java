@@ -47,7 +47,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
             "/favicon.ico",
             "/**/*.html",
             "/**/*.css",
-            "/**/*.js"
+            "/**/*.js",
+            "/h2-console/**"
          );
    }
 
@@ -62,6 +63,12 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
          .exceptionHandling()
          .authenticationEntryPoint(problemSupport)
          .accessDeniedHandler(problemSupport)
+
+         // enable h2-console
+         .and()
+         .headers()
+         .frameOptions()
+         .sameOrigin()
 
          // create no session
          .and()
