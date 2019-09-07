@@ -8,6 +8,7 @@ import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.filter.CorsFilter;
 import org.zerhusen.security.SecurityProblemSupport;
 import org.zerhusen.security.jwt.JWTConfigurer;
@@ -23,7 +24,6 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
    private final CorsFilter corsFilter;
    private final SecurityProblemSupport problemSupport;
 
-   @SuppressWarnings("SpringJavaInjectionPointsAutowiringInspection")
    public WebSecurityConfig(
       TokenProvider tokenProvider,
       CorsFilter corsFilter,
@@ -56,6 +56,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
       httpSecurity
          // we don't need CSRF because our token is invulnerable
          .csrf().disable()
+
+         .addFilterBefore(corsFilter, UsernamePasswordAuthenticationFilter.class)
 
          .exceptionHandling()
          .authenticationEntryPoint(problemSupport)
