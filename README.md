@@ -2,44 +2,47 @@
 
 ![Screenshot from running application](etc/screenshot-jwt-spring-security-demo.png?raw=true "Screenshot JWT Spring Security Demo")
 
-##About
-This is just a simple demo for using **JWT (JSON Web Token)** with **Spring Security** and
-**Spring Boot**. This solution is partially based on the blog entry
-[REST Security with JWT using Java and Spring Security](https://www.toptal.com/java/rest-security-with-jwt-spring-security-and-java)
-and the demo project [Cerberus](https://github.com/brahalla/Cerberus). Thanks to the authors!
+## About
+This is a demo for using **[JWT (JSON Web Token)](https://jwt.io)** with **[Spring Security](https://spring.io/projects/spring-security)** and
+**[Spring Boot](https://spring.io/projects/spring-boot)**. This solution is based on the code base from the [JHipster Project](https://www.jhipster.tech/).
+I tried to extract the minimal configuration and classes that are needed for JWT-Authentication and did some changes.
 
-##Requirements
-This demo is build with with Maven and Java 1.8.
+## Requirements
+This demo is build with with Maven 3.6.x and Java 11.
 
-##Usage
+## Usage
 Just start the application with the Spring Boot maven plugin (`mvn spring-boot:run`). The application is
 running at [http://localhost:8080](http://localhost:8080).
 
+## Backend
 There are three user accounts present to demonstrate the different levels of access to the endpoints in
 the API and the different authorization exceptions:
 ```
 Admin - admin:admin
 User - user:password
-Disabled - disabled:password (this user is disabled)
+Disabled - disabled:password (this user is deactivated)
 ```
 
-There are three endpoints that are reasonable for the demo:
+There are four endpoints that are reasonable for the demo:
 ```
-/auth - authentication endpoint with unrestricted access
-/persons - an example endpoint that is restricted to authorized users (a valid JWT token must be present in the request header)
-/protected - an example endpoint that is restricted to authorized users with the role 'ROLE_ADMIN' (a valid JWT token must be present in the request header)
+/api/authenticate - authentication endpoint with unrestricted access
+/api/user - returns detail information for an authenticated user (a valid JWT token must be present in the request header)
+/api/persons - an example endpoint that is restricted to authorized users with the authority 'ROLE_USER' (a valid JWT token must be present in the request header)
+/api/hiddenmessage - an example endpoint that is restricted to authorized users with the authority 'ROLE_ADMIN' (a valid JWT token must be present in the request header)
 ```
 
-I've written a small Javascript client and put some comments in the code that hopefully makes this demo
-understandable.
+## Frontend
+I've written a small Javascript client and put some comments in the code that hopefully makes this demo understandable.
+You can find it at [/Users/stephan/projects/private/jwt-spring-security-demo/src/main/resources/static/js/client.js](/src/main/resources/static/js/client.js).
 
-###Generating password hash for new users
+### Generating password hashes for new users
 
 I'm using [bcrypt](https://en.wikipedia.org/wiki/Bcrypt) to encode passwords. Your can generate your hashes with this simple tool: [Bcrypt Generator](https://www.bcrypt-generator.com)
 
-###Using another database
+### Using another database
 
-Actually this demo is using an embedded H2 database that is automatically configured by Spring Boot. If you want to connect to another database you have to specify the connection in the *application.yml* in the resource directory. Here is an example for a MySQL DB:
+Actually this demo is using an embedded H2 database that is automatically configured by Spring Boot. If you want to connect 
+to another database you have to specify the connection in the *application.yml* in the resource directory. Here is an example for a MySQL DB:
 
 ```
 spring:
@@ -56,20 +59,14 @@ spring:
 
 You can find a reference of all properties [here](http://docs.spring.io/spring-boot/docs/current/reference/html/common-application-properties.html).
 
-##External resources
-
-Dan Vega (https://twitter.com/therealdanvega) created a video that explained this project quite fine. Thanks to him!
-
-https://youtu.be/mD3vmgksvz8
-
-##Creator
+## Author
 
 **Stephan Zerhusen**
 
 * <https://twitter.com/stzerhus>
 * <https://github.com/szerhusenBC>
 
-##Copyright and license
+## Copyright and license
 
 The code is released under the [MIT license](LICENSE?raw=true).
 
