@@ -44,7 +44,7 @@ $(function () {
                   .modal("show")
                   .find(".modal-body")
                   .empty()
-                  .html("<p>Spring exception:<br>" + jqXHR.responseJSON.exception + "</p>");
+                  .html("<p>" + jqXHR.responseJSON.message + "</p>");
             } else {
                throw new Error("an unexpected error occured: " + errorThrown);
             }

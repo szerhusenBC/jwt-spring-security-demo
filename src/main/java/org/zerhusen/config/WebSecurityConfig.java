@@ -12,6 +12,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.filter.CorsFilter;
+import org.zerhusen.security.JwtAuthenticationEntryPoint;
 import org.zerhusen.security.jwt.JWTConfigurer;
 import org.zerhusen.security.jwt.TokenProvider;
 
@@ -20,15 +21,16 @@ import org.zerhusen.security.jwt.TokenProvider;
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
    private final TokenProvider tokenProvider;
-
    private final CorsFilter corsFilter;
+   private final JwtAuthenticationEntryPoint authenticationErrorHandler;
 
    public WebSecurityConfig(
       TokenProvider tokenProvider,
-      CorsFilter corsFilter
-   ) {
+      CorsFilter corsFilter,
+      JwtAuthenticationEntryPoint authenticationErrorHandler) {
       this.tokenProvider = tokenProvider;
       this.corsFilter = corsFilter;
+      this.authenticationErrorHandler = authenticationErrorHandler;
    }
 
    // Configure BCrypt password encoder =====================================================================
@@ -67,6 +69,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
          .csrf().disable()
 
          .addFilterBefore(corsFilter, UsernamePasswordAuthenticationFilter.class)
+
+         .exceptionHandling().authenticationEntryPoint(authenticationErrorHandler).and()
 
          // enable h2-console
          .headers()
