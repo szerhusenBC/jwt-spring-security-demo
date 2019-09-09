@@ -23,13 +23,13 @@ import javax.validation.Valid;
  */
 @RestController
 @RequestMapping("/api")
-public class UserJwtRestController {
+public class AuthenticationRestController {
 
    private final TokenProvider tokenProvider;
 
    private final AuthenticationManagerBuilder authenticationManagerBuilder;
 
-   public UserJwtRestController(TokenProvider tokenProvider, AuthenticationManagerBuilder authenticationManagerBuilder) {
+   public AuthenticationRestController(TokenProvider tokenProvider, AuthenticationManagerBuilder authenticationManagerBuilder) {
       this.tokenProvider = tokenProvider;
       this.authenticationManagerBuilder = authenticationManagerBuilder;
    }
@@ -42,10 +42,13 @@ public class UserJwtRestController {
 
       Authentication authentication = authenticationManagerBuilder.getObject().authenticate(authenticationToken);
       SecurityContextHolder.getContext().setAuthentication(authentication);
+
       boolean rememberMe = (loginDto.isRememberMe() == null) ? false : loginDto.isRememberMe();
       String jwt = tokenProvider.createToken(authentication, rememberMe);
+
       HttpHeaders httpHeaders = new HttpHeaders();
       httpHeaders.add(JWTFilter.AUTHORIZATION_HEADER, "Bearer " + jwt);
+
       return new ResponseEntity<>(new JWTToken(jwt), httpHeaders, HttpStatus.OK);
    }
 
