@@ -14,6 +14,7 @@ import java.util.Set;
 @Table(name = "USER")
 public class User {
 
+   @JsonIgnore
    @Id
    @Column(name = "ID")
    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "USER_SEQ")
@@ -25,6 +26,7 @@ public class User {
    @Size(min = 4, max = 50)
    private String username;
 
+   @JsonIgnore
    @Column(name = "PASSWORD", length = 100)
    @NotNull
    @Size(min = 4, max = 100)
@@ -45,11 +47,11 @@ public class User {
    @Size(min = 4, max = 50)
    private String email;
 
+   @JsonIgnore
    @Column(name = "ACTIVATED")
    @NotNull
    private boolean activated;
 
-   @JsonIgnore
    @ManyToMany
    @JoinTable(
       name = "USER_AUTHORITY",

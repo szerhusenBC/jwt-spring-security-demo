@@ -1,7 +1,6 @@
 package org.zerhusen.config;
 
 import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Import;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -13,28 +12,23 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.filter.CorsFilter;
-import org.zerhusen.security.SecurityProblemSupport;
 import org.zerhusen.security.jwt.JWTConfigurer;
 import org.zerhusen.security.jwt.TokenProvider;
 
 @EnableWebSecurity
 @EnableGlobalMethodSecurity(prePostEnabled = true, securedEnabled = true)
-@Import(SecurityProblemSupport.class)
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
    private final TokenProvider tokenProvider;
 
    private final CorsFilter corsFilter;
-   private final SecurityProblemSupport problemSupport;
 
    public WebSecurityConfig(
       TokenProvider tokenProvider,
-      CorsFilter corsFilter,
-      SecurityProblemSupport problemSupport
+      CorsFilter corsFilter
    ) {
       this.tokenProvider = tokenProvider;
       this.corsFilter = corsFilter;
-      this.problemSupport = problemSupport;
    }
 
    // Configure BCrypt password encoder =====================================================================
@@ -74,12 +68,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
          .addFilterBefore(corsFilter, UsernamePasswordAuthenticationFilter.class)
 
-         .exceptionHandling()
-         .authenticationEntryPoint(problemSupport)
-         .accessDeniedHandler(problemSupport)
-
          // enable h2-console
-         .and()
          .headers()
          .frameOptions()
          .sameOrigin()
@@ -97,8 +86,11 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
          // .antMatchers("/api/account/reset-password/init").permitAll()
          // .antMatchers("/api/account/reset-password/finish").permitAll()
 
-         .and()
-         .httpBasic()
+         .antMatchers("/api/person").hasAuthority("ROLE_USER")
+         .antMatchers("/api/hiddenmessage").hasAuthority("ROLE_ADMIN")
+
+         .anyRequest().authenticated()
+
          .and()
          .apply(securityConfigurerAdapter());
    }

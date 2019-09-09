@@ -8,18 +8,24 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.Assert.*;
 
 public class SecurityUtilsTest {
 
    @Test
-   public void getCurrentUserLogin() {
+   public void getCurrentUsername() {
       SecurityContext securityContext = SecurityContextHolder.createEmptyContext();
       securityContext.setAuthentication(new UsernamePasswordAuthenticationToken("admin", "admin"));
       SecurityContextHolder.setContext(securityContext);
 
-      Optional<String> login = SecurityUtils.getCurrentUserLogin();
+      Optional<String> username = SecurityUtils.getCurrentUsername();
 
-      assertThat(login).contains("admin");
+      assertThat(username).contains("admin");
+   }
+
+   @Test
+   public void getCurrentUsernameForNoAuthenticationInContext() {
+      Optional<String> username = SecurityUtils.getCurrentUsername();
+
+      assertThat(username).isEmpty();
    }
 }

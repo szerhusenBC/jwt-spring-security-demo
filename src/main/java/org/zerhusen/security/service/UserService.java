@@ -20,7 +20,7 @@ public class UserService {
 
    @Transactional(readOnly = true)
    public Optional<User> getUserWithAuthorities() {
-      return SecurityUtils.getCurrentUserLogin().flatMap(userRepository::findOneWithAuthoritiesByUsername);
+      return SecurityUtils.getCurrentUsername().flatMap(userRepository::findOneWithAuthoritiesByUsername);
    }
 
 }
