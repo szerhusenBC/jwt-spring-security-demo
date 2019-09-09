@@ -33,7 +33,7 @@ There are four endpoints that are reasonable for the demo:
 
 ## Frontend
 I've written a small Javascript client and put some comments in the code that hopefully makes this demo understandable.
-You can find it at [/Users/stephan/projects/private/jwt-spring-security-demo/src/main/resources/static/js/client.js](/src/main/resources/static/js/client.js).
+You can find it at [/src/main/resources/static/js/client.js](/src/main/resources/static/js/client.js).
 
 ### Generating password hashes for new users
 
