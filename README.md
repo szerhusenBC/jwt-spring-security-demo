@@ -8,6 +8,8 @@ This is a demo for using **[JWT (JSON Web Token)](https://jwt.io)** with **[Spri
 from the [JHipster Project](https://www.jhipster.tech/). I tried to extract the minimal configuration and classes that are needed 
 for JWT-Authentication and did some changes.
 
+[![Build Status](https://travis-ci.org/szerhusenBC/jwt-spring-security-demo.svg?branch=master)](https://travis-ci.org/szerhusenBC/jwt-spring-security-demo)
+
 ## Requirements
 This demo is build with with Maven 3.6.x and Java 11.
 
