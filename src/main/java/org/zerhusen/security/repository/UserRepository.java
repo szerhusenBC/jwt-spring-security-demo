@@ -1,11 +1,17 @@
 package org.zerhusen.security.repository;
 
+import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.zerhusen.model.security.User;
+import org.zerhusen.security.model.User;
 
-/**
- * Created by stephan on 20.03.16.
- */
+import java.util.Optional;
+
 public interface UserRepository extends JpaRepository<User, Long> {
-    User findByUsername(String username);
+
+   @EntityGraph(attributePaths = "authorities")
+   Optional<User> findOneWithAuthoritiesByUsername(String username);
+
+   @EntityGraph(attributePaths = "authorities")
+   Optional<User> findOneWithAuthoritiesByEmailIgnoreCase(String email);
+
 }

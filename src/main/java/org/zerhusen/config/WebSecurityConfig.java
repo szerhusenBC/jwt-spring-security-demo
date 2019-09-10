@@ -1,12 +1,7 @@
 package org.zerhusen.config;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.builders.WebSecurity;
@@ -16,104 +11,95 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.web.filter.CorsFilter;
 import org.zerhusen.security.JwtAuthenticationEntryPoint;
-import org.zerhusen.security.JwtAuthorizationTokenFilter;
-import org.zerhusen.security.service.JwtUserDetailsService;
+import org.zerhusen.security.jwt.JWTConfigurer;
+import org.zerhusen.security.jwt.TokenProvider;
 
-@Configuration
 @EnableWebSecurity
-@EnableGlobalMethodSecurity(prePostEnabled = true)
+@EnableGlobalMethodSecurity(prePostEnabled = true, securedEnabled = true)
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
-    @Autowired
-    private JwtAuthenticationEntryPoint unauthorizedHandler;
+   private final TokenProvider tokenProvider;
+   private final CorsFilter corsFilter;
+   private final JwtAuthenticationEntryPoint authenticationErrorHandler;
 
-    @Autowired
-    private JwtUserDetailsService jwtUserDetailsService;
+   public WebSecurityConfig(
+      TokenProvider tokenProvider,
+      CorsFilter corsFilter,
+      JwtAuthenticationEntryPoint authenticationErrorHandler) {
+      this.tokenProvider = tokenProvider;
+      this.corsFilter = corsFilter;
+      this.authenticationErrorHandler = authenticationErrorHandler;
+   }
 
-    // Custom JWT based security filter
-    @Autowired
-    JwtAuthorizationTokenFilter authenticationTokenFilter;
+   // Configure BCrypt password encoder =====================================================================
 
-    @Value("${jwt.header}")
-    private String tokenHeader;
+   @Bean
+   public PasswordEncoder passwordEncoder() {
+      return new BCryptPasswordEncoder();
+   }
 
-    @Value("${jwt.route.authentication.path}")
-    private String authenticationPath;
+   // Configure paths and requests that should be ignored by Spring Security ================================
 
-    @Autowired
-    public void configureGlobal(AuthenticationManagerBuilder auth) throws Exception {
-        auth
-            .userDetailsService(jwtUserDetailsService)
-            .passwordEncoder(passwordEncoderBean());
-    }
+   @Override
+   public void configure(WebSecurity web) {
+      web.ignoring()
+         .antMatchers(HttpMethod.OPTIONS, "/**")
 
-    @Bean
-    public PasswordEncoder passwordEncoderBean() {
-        return new BCryptPasswordEncoder();
-    }
+         // allow anonymous resource requests
+         .antMatchers(
+            HttpMethod.GET,
+            "/",
+            "/*.html",
+            "/favicon.ico",
+            "/**/*.html",
+            "/**/*.css",
+            "/**/*.js",
+            "/h2-console/**"
+         );
+   }
 
-    @Bean
-    @Override
-    public AuthenticationManager authenticationManagerBean() throws Exception {
-        return super.authenticationManagerBean();
-    }
+   // Configure security settings ===========================================================================
 
-    @Override
-    protected void configure(HttpSecurity httpSecurity) throws Exception {
-        httpSecurity
-            // we don't need CSRF because our token is invulnerable
-            .csrf().disable()
+   @Override
+   protected void configure(HttpSecurity httpSecurity) throws Exception {
+      httpSecurity
+         // we don't need CSRF because our token is invulnerable
+         .csrf().disable()
 
-            .exceptionHandling().authenticationEntryPoint(unauthorizedHandler).and()
+         .addFilterBefore(corsFilter, UsernamePasswordAuthenticationFilter.class)
 
-            // don't create session
-            .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()
+         .exceptionHandling().authenticationEntryPoint(authenticationErrorHandler).and()
 
-            .authorizeRequests()
+         // enable h2-console
+         .headers()
+         .frameOptions()
+         .sameOrigin()
 
-            // Un-secure H2 Database
-            .antMatchers("/h2-console/**/**").permitAll()
+         // create no session
+         .and()
+         .sessionManagement()
+         .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
 
-            .antMatchers("/auth/**").permitAll()
-            .anyRequest().authenticated();
+         .and()
+         .authorizeRequests()
+         .antMatchers("/api/authenticate").permitAll()
+         // .antMatchers("/api/register").permitAll()
+         // .antMatchers("/api/activate").permitAll()
+         // .antMatchers("/api/account/reset-password/init").permitAll()
+         // .antMatchers("/api/account/reset-password/finish").permitAll()
 
-       httpSecurity
-            .addFilterBefore(authenticationTokenFilter, UsernamePasswordAuthenticationFilter.class);
+         .antMatchers("/api/person").hasAuthority("ROLE_USER")
+         .antMatchers("/api/hiddenmessage").hasAuthority("ROLE_ADMIN")
 
-        // disable page caching
-        httpSecurity
-            .headers()
-            .frameOptions().sameOrigin()  // required to set for H2 else H2 Console will be blank.
-            .cacheControl();
-    }
+         .anyRequest().authenticated()
 
-    @Override
-    public void configure(WebSecurity web) throws Exception {
-        // AuthenticationTokenFilter will ignore the below paths
-        web
-            .ignoring()
-            .antMatchers(
-                HttpMethod.POST,
-                authenticationPath
-            )
+         .and()
+         .apply(securityConfigurerAdapter());
+   }
 
-            // allow anonymous resource requests
-            .and()
-            .ignoring()
-            .antMatchers(
-                HttpMethod.GET,
-                "/",
-                "/*.html",
-                "/favicon.ico",
-                "/**/*.html",
-                "/**/*.css",
-                "/**/*.js"
-            )
-
-            // Un-secure H2 Database (for testing purposes, H2 console shouldn't be unprotected in production)
-            .and()
-            .ignoring()
-            .antMatchers("/h2-console/**/**");
-    }
+   private JWTConfigurer securityConfigurerAdapter() {
+      return new JWTConfigurer(tokenProvider);
+   }
 }

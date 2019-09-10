@@ -9,39 +9,37 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.zerhusen.util.LogInUtils.getTokenForLogin;
 
-public class PersonRestControllerTest extends AbstractRestControllerTest {
+public class AdminProtectedRestControllerTest extends AbstractRestControllerTest {
 
    @Test
-   public void getPersonForUser() throws Exception {
+   public void getAdminProtectedGreetingForUser() throws Exception {
       final String token = getTokenForLogin("user", "password", getMockMvc());
 
-      assertSuccessfulPersonRequest(token);
+      getMockMvc().perform(get("/api/hiddenmessage")
+         .contentType(MediaType.APPLICATION_JSON)
+         .header("Authorization", "Bearer " + token))
+         .andExpect(status().isForbidden());
    }
 
    @Test
-   public void getPersonForAdmin() throws Exception {
+   public void getAdminProtectedGreetingForAdmin() throws Exception {
       final String token = getTokenForLogin("admin", "admin", getMockMvc());
 
-      assertSuccessfulPersonRequest(token);
-   }
-
-   @Test
-   public void getPersonForAnonymous() throws Exception {
-      getMockMvc().perform(get("/api/person")
-         .contentType(MediaType.APPLICATION_JSON))
-         .andExpect(status().isUnauthorized());
-   }
-
-   private void assertSuccessfulPersonRequest(String token) throws Exception {
-      getMockMvc().perform(get("/api/person")
+      getMockMvc().perform(get("/api/hiddenmessage")
          .contentType(MediaType.APPLICATION_JSON)
          .header("Authorization", "Bearer " + token))
          .andExpect(status().isOk())
          .andExpect(content().json(
             "{\n" +
-               "  \"name\" : \"John Doe\",\n" +
-               "  \"email\" : \"john.doe@test.org\"\n" +
+               "  \"message\" : \"this is a hidden message!\"\n" +
                "}"
          ));
+   }
+
+   @Test
+   public void getAdminProtectedGreetingForAnonymous() throws Exception {
+      getMockMvc().perform(get("/api/hiddenmessage")
+         .contentType(MediaType.APPLICATION_JSON))
+         .andExpect(status().isUnauthorized());
    }
 }

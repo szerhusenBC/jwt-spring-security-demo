@@ -3,192 +3,187 @@
  */
 
 $(function () {
-    // VARIABLES =============================================================
-    var TOKEN_KEY = "jwtToken"
-    var $notLoggedIn = $("#notLoggedIn");
-    var $loggedIn = $("#loggedIn").hide();
-    var $loggedInBody = $("#loggedInBody");
-    var $response = $("#response");
-    var $login = $("#login");
-    var $userInfo = $("#userInfo").hide();
+   // VARIABLES =============================================================
+   var TOKEN_KEY = "jwtToken"
+   var $notLoggedIn = $("#notLoggedIn");
+   var $loggedIn = $("#loggedIn").hide();
+   var $response = $("#response");
+   var $login = $("#login");
+   var $userInfo = $("#userInfo").hide();
 
-    // FUNCTIONS =============================================================
-    function getJwtToken() {
-        return localStorage.getItem(TOKEN_KEY);
-    }
+   // FUNCTIONS =============================================================
+   function getJwtToken() {
+      return localStorage.getItem(TOKEN_KEY);
+   }
 
-    function setJwtToken(token) {
-        localStorage.setItem(TOKEN_KEY, token);
-    }
+   function setJwtToken(token) {
+      localStorage.setItem(TOKEN_KEY, token);
+   }
 
-    function removeJwtToken() {
-        localStorage.removeItem(TOKEN_KEY);
-    }
+   function removeJwtToken() {
+      localStorage.removeItem(TOKEN_KEY);
+   }
 
-    function doLogin(loginData) {
-        $.ajax({
-            url: "/auth",
-            type: "POST",
-            data: JSON.stringify(loginData),
-            contentType: "application/json; charset=utf-8",
-            dataType: "json",
-            success: function (data, textStatus, jqXHR) {
-                console.log(data);
-                setJwtToken(data.token);
-                $login.hide();
-                $notLoggedIn.hide();
-                showTokenInformation();
-                showUserInformation();
-            },
-            error: function (jqXHR, textStatus, errorThrown) {
-                if (jqXHR.status === 401 || jqXHR.status === 403) {
-                    $('#loginErrorModal')
-                        .modal("show")
-                        .find(".modal-body")
-                        .empty()
-                        .html("<p>Message from server:<br>" + jqXHR.responseText + "</p>");
-                } else {
-                    throw new Error("an unexpected error occured: " + errorThrown);
-                }
+   function doLogin(loginData) {
+      $.ajax({
+         url: "/api/authenticate",
+         type: "POST",
+         data: JSON.stringify(loginData),
+         contentType: "application/json; charset=utf-8",
+         dataType: "json",
+         success: function (data, textStatus, jqXHR) {
+            setJwtToken(data.id_token);
+            $login.hide();
+            $notLoggedIn.hide();
+            showTokenInformation()
+            showUserInformation();
+         },
+         error: function (jqXHR, textStatus, errorThrown) {
+            if (jqXHR.status === 401) {
+               $('#loginErrorModal')
+                  .modal("show")
+                  .find(".modal-body")
+                  .empty()
+                  .html("<p>" + jqXHR.responseJSON.message + "</p>");
+            } else {
+               throw new Error("an unexpected error occured: " + errorThrown);
             }
-        });
-    }
+         }
+      });
+   }
 
-    function doLogout() {
-        removeJwtToken();
-        $login.show();
-        $userInfo
-            .hide()
-            .find("#userInfoBody").empty();
-        $loggedIn.hide();
-        $loggedInBody.empty();
-        $notLoggedIn.show();
-    }
+   function doLogout() {
+      removeJwtToken();
+      $login.show();
+      $userInfo
+         .hide()
+         .find("#userInfoBody").empty();
+      $loggedIn
+         .hide()
+         .attr("title", "")
+         .empty();
+      $notLoggedIn.show();
+   }
 
-    function createAuthorizationTokenHeader() {
-        var token = getJwtToken();
-        if (token) {
-            return {"Authorization": "Bearer " + token};
-        } else {
-            return {};
-        }
-    }
+   function createAuthorizationTokenHeader() {
+      var token = getJwtToken();
+      if (token) {
+         return {"Authorization": "Bearer " + token};
+      } else {
+         return {};
+      }
+   }
 
-    function showUserInformation() {
-        $.ajax({
-            url: "/user",
-            type: "GET",
-            contentType: "application/json; charset=utf-8",
-            dataType: "json",
-            headers: createAuthorizationTokenHeader(),
-            success: function (data, textStatus, jqXHR) {
-                var $userInfoBody = $userInfo.find("#userInfoBody");
+   function showUserInformation() {
+      $.ajax({
+         url: "/api/user",
+         type: "GET",
+         contentType: "application/json; charset=utf-8",
+         dataType: "json",
+         headers: createAuthorizationTokenHeader(),
+         success: function (data, textStatus, jqXHR) {
+            var $userInfoBody = $userInfo.find("#userInfoBody");
 
-                $userInfoBody.append($("<div>").text("Username: " + data.username));
-                $userInfoBody.append($("<div>").text("Email: " + data.email));
+            $userInfoBody.append($("<div>").text("Username: " + data.username));
+            $userInfoBody.append($("<div>").text("Firstname: " + data.firstname));
+            $userInfoBody.append($("<div>").text("Lastname: " + data.lastname));
+            $userInfoBody.append($("<div>").text("Email: " + data.email));
 
-                var $authorityList = $("<ul>");
-                data.authorities.forEach(function (authorityItem) {
-                    $authorityList.append($("<li>").text(authorityItem.authority));
-                });
-                var $authorities = $("<div>").text("Authorities:");
-                $authorities.append($authorityList);
+            var $authorityList = $("<ul>");
+            data.authorities.forEach(function (authorityItem) {
+               $authorityList.append($("<li>").text(authorityItem.name));
+            });
+            var $authorities = $("<div>").text("Authorities:");
+            $authorities.append($authorityList);
 
-                $userInfoBody.append($authorities);
-                $userInfo.show();
-            }
-        });
-    }
+            $userInfoBody.append($authorities);
+            $userInfo.show();
+         }
+      });
+   }
 
-    function showTokenInformation() {
-        var jwtToken = getJwtToken();
-        var decodedToken = jwt_decode(jwtToken);
+   function showTokenInformation() {
+      $loggedIn
+         .text("Token: " + getJwtToken())
+         .attr("title", "Token: " + getJwtToken())
+         .show();
+   }
 
-        $loggedInBody.append($("<h4>").text("Token"));
-        $loggedInBody.append($("<div>").text(jwtToken).css("word-break", "break-all"));
-        $loggedInBody.append($("<h4>").text("Token claims"));
+   function showResponse(statusCode, message) {
+      $response
+         .empty()
+         .text(
+            "status code: "
+            + statusCode + "\n-------------------------\n"
+            + (typeof message === "object" ? JSON.stringify(message) : message)
+         );
+   }
 
-        var $table = $("<table>")
-            .addClass("table table-striped");
-        appendKeyValue($table, "sub", decodedToken.sub);
-        appendKeyValue($table, "iat", decodedToken.iat);
-        appendKeyValue($table, "exp", decodedToken.exp);
+   function showErrorResponse(statusCode) {
+      var message = "Unknown error";
+      if (statusCode === 401) message = "You are not authorized!";
+      if (statusCode === 403) message = "This request is forbidden for you!";
+      showResponse(statusCode, message);
+   }
 
-        $loggedInBody.append($table);
+   // REGISTER EVENT LISTENERS =============================================================
+   $("#loginForm").submit(function (event) {
+      event.preventDefault();
 
-        $loggedIn.show();
-    }
+      var $form = $(this);
+      var formData = {
+         username: $form.find('input[name="username"]').val(),
+         password: $form.find('input[name="password"]').val()
+      };
 
-    function appendKeyValue($table, key, value) {
-        var $row = $("<tr>")
-            .append($("<td>").text(key))
-            .append($("<td>").text(value));
-        $table.append($row);
-    }
+      doLogin(formData);
+   });
 
-    function showResponse(statusCode, message) {
-        $response
-            .empty()
-            .text("status code: " + statusCode + "\n-------------------------\n" + message);
-    }
+   $("#logoutButton").click(doLogout);
 
-    // REGISTER EVENT LISTENERS =============================================================
-    $("#loginForm").submit(function (event) {
-        event.preventDefault();
+   $("#exampleServiceBtn").click(function () {
+      $.ajax({
+         url: "/api/person",
+         type: "GET",
+         contentType: "application/json; charset=utf-8",
+         dataType: "json",
+         headers: createAuthorizationTokenHeader(),
+         success: function (data, textStatus, jqXHR) {
+            showResponse(jqXHR.status, JSON.stringify(data));
+         },
+         error: function (jqXHR, textStatus, errorThrown) {
+            showErrorResponse(jqXHR.status);
+         }
+      });
+   });
 
-        var $form = $(this);
-        var formData = {
-            username: $form.find('input[name="username"]').val(),
-            password: $form.find('input[name="password"]').val()
-        };
+   $("#adminServiceBtn").click(function () {
+      $.ajax({
+         url: "/api/hiddenmessage",
+         type: "GET",
+         contentType: "application/json; charset=utf-8",
+         dataType: "json",
+         headers: createAuthorizationTokenHeader(),
+         success: function (data, textStatus, jqXHR) {
+            showResponse(jqXHR.status, data);
+         },
+         error: function (jqXHR, textStatus, errorThrown) {
+            showErrorResponse(jqXHR.status);
+         }
+      });
+   });
 
-        doLogin(formData);
-    });
+   $loggedIn.click(function () {
+      $loggedIn
+         .toggleClass("text-hidden")
+         .toggleClass("text-shown");
+   });
 
-    $("#logoutButton").click(doLogout);
-
-    $("#exampleServiceBtn").click(function () {
-        $.ajax({
-            url: "/persons",
-            type: "GET",
-            contentType: "application/json; charset=utf-8",
-            dataType: "json",
-            headers: createAuthorizationTokenHeader(),
-            success: function (data, textStatus, jqXHR) {
-                showResponse(jqXHR.status, JSON.stringify(data));
-            },
-            error: function (jqXHR, textStatus, errorThrown) {
-                showResponse(jqXHR.status, errorThrown);
-            }
-        });
-    });
-
-    $("#adminServiceBtn").click(function () {
-        $.ajax({
-            url: "/protected",
-            type: "GET",
-            contentType: "application/json; charset=utf-8",
-            headers: createAuthorizationTokenHeader(),
-            success: function (data, textStatus, jqXHR) {
-                showResponse(jqXHR.status, data);
-            },
-            error: function (jqXHR, textStatus, errorThrown) {
-                showResponse(jqXHR.status, errorThrown);
-            }
-        });
-    });
-
-    $loggedIn.click(function () {
-        $loggedIn
-            .toggleClass("text-hidden")
-            .toggleClass("text-shown");
-    });
-
-    // INITIAL CALLS =============================================================
-    if (getJwtToken()) {
-        $login.hide();
-        $notLoggedIn.hide();
-        showTokenInformation();
-        showUserInformation();
-    }
+   // INITIAL CALLS =============================================================
+   if (getJwtToken()) {
+      $login.hide();
+      $notLoggedIn.hide();
+      showTokenInformation();
+      showUserInformation();
+   }
 });

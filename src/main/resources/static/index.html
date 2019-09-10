@@ -12,12 +12,25 @@
    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap-theme.min.css"
          integrity="sha384-fLW2N01lMqjakBkx3l/M9EahuwpSfeNvV63J5ezn3uZzapT0u7EYsXMjQV+0En5r" crossorigin="anonymous">
 
+   <style type="text/css">
+      .text-hidden {
+         text-overflow: ellipsis;
+         overflow: hidden;
+         white-space: nowrap;
+      }
+
+      .text-shown {
+         word-wrap: break-word;
+      }
+   </style>
 </head>
 <body>
 <div class="container">
    <h1>JWT Spring Security Demo</h1>
 
    <div class="alert alert-danger" id="notLoggedIn">Not logged in!</div>
+
+   <div class="alert alert-info text-hidden" id="loggedIn"></div>
 
    <div class="row">
       <div class="col-md-6">
@@ -76,24 +89,14 @@
          </div>
       </div>
    </div>
-
-   <div class="row">
-      <div id="loggedIn" class="col-md-6">
-         <div class="panel panel-default">
-            <div class="panel-heading">
-               <h3 class="panel-title">Token information</h3>
-            </div>
-            <div class="panel-body" id="loggedInBody"></div>
-         </div>
-      </div>
-   </div>
 </div>
 
 <div class="modal fade" tabindex="-1" role="dialog" id="loginErrorModal">
    <div class="modal-dialog">
       <div class="modal-content">
          <div class="modal-header">
-            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+               aria-hidden="true">&times;</span></button>
             <h4 class="modal-title">Login unsuccessful</h4>
          </div>
          <div class="modal-body"></div>
@@ -106,11 +109,9 @@
 
 <script src="https://code.jquery.com/jquery-2.2.2.js" integrity="sha256-4/zUCqiq0kqxhZIyp4G0Gk+AOtCJsY1TA00k5ClsZYE="
         crossorigin="anonymous"></script>
-<!-- Latest compiled and minified JavaScript -->
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"
         integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS"
         crossorigin="anonymous"></script>
-<script src="js/libs/jwt-decode.min.js"></script>
 <script src="js/client.js"></script>
 </body>
 </html>
