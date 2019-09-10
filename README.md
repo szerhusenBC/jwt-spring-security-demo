@@ -15,6 +15,10 @@ This demo is build with with Maven 3.6.x and Java 11.
 Just start the application with the Spring Boot maven plugin (`mvn spring-boot:run`). The application is
 running at [http://localhost:8080](http://localhost:8080).
 
+You can use the **H2-Console** for exploring the database under [http://localhost:8080/h2-console](http://localhost:8080/h2-console):
+
+![Screenshot from h2-console login](etc/screenshot-h2-console-login.png?raw=true "Screenshot H2-Console login")
+
 ## Backend
 There are three user accounts present to demonstrate the different levels of access to the endpoints in
 the API and the different authorization exceptions:
