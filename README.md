@@ -92,8 +92,8 @@ Sorry for that but I'm very busy right now and don't have much time.
 
 **Stephan Zerhusen**
 
-* <https://twitter.com/stzerhus>
-* <https://github.com/szerhusenBC>
+* https://twitter.com/stzerhus
+* https://github.com/szerhusenBC
 
 ## Copyright and license
 
