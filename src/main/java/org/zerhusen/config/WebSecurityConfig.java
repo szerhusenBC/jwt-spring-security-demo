@@ -12,6 +12,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.filter.CorsFilter;
+import org.zerhusen.security.JwtAccessDeniedHandler;
 import org.zerhusen.security.JwtAuthenticationEntryPoint;
 import org.zerhusen.security.jwt.JWTConfigurer;
 import org.zerhusen.security.jwt.TokenProvider;
@@ -23,14 +24,18 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
    private final TokenProvider tokenProvider;
    private final CorsFilter corsFilter;
    private final JwtAuthenticationEntryPoint authenticationErrorHandler;
+   private final JwtAccessDeniedHandler jwtAccessDeniedHandler;
 
    public WebSecurityConfig(
       TokenProvider tokenProvider,
       CorsFilter corsFilter,
-      JwtAuthenticationEntryPoint authenticationErrorHandler) {
+      JwtAuthenticationEntryPoint authenticationErrorHandler,
+      JwtAccessDeniedHandler jwtAccessDeniedHandler
+   ) {
       this.tokenProvider = tokenProvider;
       this.corsFilter = corsFilter;
       this.authenticationErrorHandler = authenticationErrorHandler;
+      this.jwtAccessDeniedHandler = jwtAccessDeniedHandler;
    }
 
    // Configure BCrypt password encoder =====================================================================
@@ -49,7 +54,6 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
          // allow anonymous resource requests
          .antMatchers(
-            HttpMethod.GET,
             "/",
             "/*.html",
             "/favicon.ico",
@@ -70,9 +74,12 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
          .addFilterBefore(corsFilter, UsernamePasswordAuthenticationFilter.class)
 
-         .exceptionHandling().authenticationEntryPoint(authenticationErrorHandler).and()
+         .exceptionHandling()
+         .authenticationEntryPoint(authenticationErrorHandler)
+         .accessDeniedHandler(jwtAccessDeniedHandler)
 
          // enable h2-console
+         .and()
          .headers()
          .frameOptions()
          .sameOrigin()

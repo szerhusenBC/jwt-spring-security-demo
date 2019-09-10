@@ -119,13 +119,6 @@ $(function () {
          );
    }
 
-   function showErrorResponse(statusCode) {
-      var message = "Unknown error";
-      if (statusCode === 401) message = "You are not authorized!";
-      if (statusCode === 403) message = "This request is forbidden for you!";
-      showResponse(statusCode, message);
-   }
-
    // REGISTER EVENT LISTENERS =============================================================
    $("#loginForm").submit(function (event) {
       event.preventDefault();
@@ -152,7 +145,7 @@ $(function () {
             showResponse(jqXHR.status, JSON.stringify(data));
          },
          error: function (jqXHR, textStatus, errorThrown) {
-            showErrorResponse(jqXHR.status);
+            showResponse(jqXHR.status, jqXHR.responseJSON.message)
          }
       });
    });
@@ -168,7 +161,7 @@ $(function () {
             showResponse(jqXHR.status, data);
          },
          error: function (jqXHR, textStatus, errorThrown) {
-            showErrorResponse(jqXHR.status);
+            showResponse(jqXHR.status, jqXHR.responseJSON.message)
          }
       });
    });

@@ -11,8 +11,6 @@ import java.io.IOException;
 @Component
 public class JwtAuthenticationEntryPoint implements AuthenticationEntryPoint {
 
-   private static final long serialVersionUID = -8970718410437077606L;
-
    @Override
    public void commence(HttpServletRequest request,
                         HttpServletResponse response,
