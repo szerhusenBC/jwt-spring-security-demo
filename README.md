@@ -4,8 +4,9 @@
 
 ## About
 This is a demo for using **[JWT (JSON Web Token)](https://jwt.io)** with **[Spring Security](https://spring.io/projects/spring-security)** and
-**[Spring Boot](https://spring.io/projects/spring-boot)**. This solution is based on the code base from the [JHipster Project](https://www.jhipster.tech/).
-I tried to extract the minimal configuration and classes that are needed for JWT-Authentication and did some changes.
+**[Spring Boot](https://spring.io/projects/spring-boot)**. I completely rewrote my first version. Now this solution is based on the code base
+from the [JHipster Project](https://www.jhipster.tech/). I tried to extract the minimal configuration and classes that are needed 
+for JWT-Authentication and did some changes.
 
 ## Requirements
 This demo is build with with Maven 3.6.x and Java 11.
@@ -37,7 +38,8 @@ You can find it at [/src/main/resources/static/js/client.js](/src/main/resources
 
 ### Generating password hashes for new users
 
-I'm using [bcrypt](https://en.wikipedia.org/wiki/Bcrypt) to encode passwords. Your can generate your hashes with this simple tool: [Bcrypt Generator](https://www.bcrypt-generator.com)
+I'm using [bcrypt](https://en.wikipedia.org/wiki/Bcrypt) to encode passwords. Your can generate your hashes with this simple 
+tool: [Bcrypt Generator](https://www.bcrypt-generator.com)
 
 ### Using another database
 
