@@ -6,9 +6,11 @@ import org.zerhusen.util.AbstractRestControllerTest;
 
 import static org.hamcrest.Matchers.containsString;
 import static org.hamcrest.Matchers.not;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.zerhusen.util.LogInUtils.getTokenForLogin;
 
 public class AuthenticationRestControllerTest extends AbstractRestControllerTest {
 
@@ -57,4 +59,23 @@ public class AuthenticationRestControllerTest extends AbstractRestControllerTest
          .andExpect(content().string(not(containsString("id_token"))));
    }
 
+   @Test
+   public void successfulRefreshToken() throws Exception {
+      final String token = getTokenForLogin("user", "password", getMockMvc());
+
+      getMockMvc().perform(get("/api/token")
+         .contentType(MediaType.APPLICATION_JSON)
+         .header("Authorization", "Bearer " + token))
+         .andExpect(status().isOk())
+         .andExpect(content().string(containsString("id_token")));
+
+   }
+
+   @Test
+   public void unsuccessfulRefreshToken() throws Exception{
+      getMockMvc().perform(get("/api/token")
+         .contentType(MediaType.APPLICATION_JSON))
+         .andExpect(status().isUnauthorized())
+         .andExpect(content().string(not(containsString("id_token"))));
+   }
 }
