@@ -150,9 +150,41 @@ $(function () {
       });
    });
 
+   $("#examplePreAuthorizeServiceBtn").click(function () {
+      $.ajax({
+         url: "/api/person-preauthorize",
+         type: "GET",
+         contentType: "application/json; charset=utf-8",
+         dataType: "json",
+         headers: createAuthorizationTokenHeader(),
+         success: function (data, textStatus, jqXHR) {
+            showResponse(jqXHR.status, JSON.stringify(data));
+         },
+         error: function (jqXHR, textStatus, errorThrown) {
+            showResponse(jqXHR.status, jqXHR.responseJSON.message)
+         }
+      });
+   });
+
    $("#adminServiceBtn").click(function () {
       $.ajax({
          url: "/api/hiddenmessage",
+         type: "GET",
+         contentType: "application/json; charset=utf-8",
+         dataType: "json",
+         headers: createAuthorizationTokenHeader(),
+         success: function (data, textStatus, jqXHR) {
+            showResponse(jqXHR.status, data);
+         },
+         error: function (jqXHR, textStatus, errorThrown) {
+            showResponse(jqXHR.status, jqXHR.responseJSON.message)
+         }
+      });
+   });
+
+   $("#adminPreAuthorizeServiceBtn").click(function () {
+      $.ajax({
+         url: "/api/preauthorize",
          type: "GET",
          contentType: "application/json; charset=utf-8",
          dataType: "json",
