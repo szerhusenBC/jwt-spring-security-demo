@@ -13,5 +13,6 @@ public class JwtDemoApplicationTest {
     public void contextLoads() {
         // just test if the application context loads
        System.out.println("Hello");
+       System.out.println("Hello");
     }
 }
