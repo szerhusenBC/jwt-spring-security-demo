@@ -12,5 +12,6 @@ public class JwtDemoApplicationTest {
     @Test
     public void contextLoads() {
         // just test if the application context loads
+       System.out.println("hello");
     }
 }
